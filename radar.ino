@@ -2,6 +2,11 @@
 
 // RADAR CON SERVO, SENSORE A ULTRASUONI, CICALINO E LED
 
+#include <Servo.h>  
+
+Servo myservo;      
+int Echo = A4;  
+int Trig = A5; 
 int ledPin = 13;
 int trig = 9;
 int echo = 8;
@@ -18,9 +23,12 @@ void setup() {
   pinMode(echo,INPUT);
   delay(2000);
   pinMode(cicalino,OUTPUT);
-  //Serial.println("Distanza:");
   pinMode(ledPin,OUTPUT);
   digitalWrite(ledPin,LOW);
+  myservo.attach(3);   
+  pinMode(Echo, INPUT);    
+  pinMode(Trig, OUTPUT);   
+  Serial.println("Ok");
 }
 
 
@@ -44,6 +52,33 @@ void loop() {
     delay(i);
   }
   delay(60);
+  
+    Serial.println("Scan");
+  myservo.write(90);
+  for (int i = 45; i < 135; i = i + 5) {
+    myservo.write(i);
+    int d = readDistanza();
+    delay(100);
+    Serial.println(d);
+  }
+  myservo.write(90);
+  delay(500);
+
 }
 
-// Fonte: https://www.youtube.com/watch?v=xbvMzptK8H8
+
+int readDistanza() {
+  digitalWrite(Trig, LOW);   
+  delayMicroseconds(2);
+  digitalWrite(Trig, HIGH);  
+  delayMicroseconds(20);
+  digitalWrite(Trig, LOW);   
+  float d = pulseIn(Echo, HIGH);  
+  d = d / 58;       
+  return (int)d;
+}  
+
+
+
+// Fonti:  https://www.youtube.com/watch?v=QEpUTYRSftY
+//         https://www.youtube.com/watch?v=xbvMzptK8H8
