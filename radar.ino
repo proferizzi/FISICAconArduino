@@ -1,33 +1,33 @@
-// GIORNATA DELL'ARTE GIUGNO 2021 - LICEO GARDONE VT
+// GIORNATA DELL'ARTE GIUGNO 2021 - LICEO 
 
-// RADAR CON SERVO, SENSORE A ULTRASUONI, CICALINO E LED
+// RADAR CON SERVO, SENSORE A ULTRASUONI, CICALINO E LED  
 
 #include <Servo.h>  // Libreria per gestire il servomotore
 Servo myservo;      // Creazione oggetto per controllare il servomotore
 
-#define ECHO 8      // Pin per ricezione del segnale al sensore a ultrasuoni
+#DEFINE ECHO 8      // Pin per ricezione del segnale al sensore a ultrasuoni
 #define TRIG 9      // Pin per trasmissione del segnale dal sensore a ultrasuoni
 #define LED 13      // Pin per LED
-#define CICALINO 4  // Pin per cicalino
+#define CIC 4       // Pin per cicalino
+#define SERVO 3     // Pin del servomotore
 
-float durata;    // Variabile 
-float distanza;  // Variabile
+float durata;    // Variabile per salvare il dato proveniente da ECHO
+float distanza;  // Variabile per salvare il risultato del calcolo della distanza
 
 
 void setup() {
-  Serial.begin(9600);
-  pinMode(trig,OUTPUT);
-  digitalWrite(trig,LOW);
-  delayMicroseconds(2);
-  pinMode(echo,INPUT);
-  delay(2000);
-  pinMode(cicalino,OUTPUT);
-  pinMode(ledPin,OUTPUT);
-  digitalWrite(ledPin,LOW);
-  myservo.attach(3);   
-  pinMode(Echo, INPUT);    
-  pinMode(Trig, OUTPUT);   
-  Serial.println("Ok");
+  Serial.begin(9600);       // Inizializzo la seriale
+  
+  pinMode(TRIG,OUTPUT);     // Inizializzo il pin di trasmissione come uscita 
+  digitalWrite(TRIG,LOW);   // Lo pongo a zero Volt
+  delayMicroseconds(2);     // Attendo 2 microsecondi
+  pinMode(ECHO,INPUT);      // Inizializzo il pin di ricezione come ingresso
+  delayMicroseconds(2);     // Attendo 2 microsecondi
+  pinMode(CIC,OUTPUT);      // Inizializzo il pin del cicalino come uscita
+  digitalWrite(CIC,LOW);    // Lo pongo a zero Volt
+  pinMode(LED,OUTPUT);      // Inizializzo il pin del LED come uscita
+  digitalWrite(LED,LOW);    // Lo pongo a zero Volt
+  myservo.attach(SERVO);        // Collego l'oggetto "myservo" al pin del servomotore 
 }
 
 
