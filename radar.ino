@@ -2,17 +2,16 @@
 
 // RADAR CON SERVO, SENSORE A ULTRASUONI, CICALINO E LED
 
-#include <Servo.h>  
+#include <Servo.h>  // Libreria per gestire il servomotore
+Servo myservo;      // Creazione oggetto per controllare il servomotore
 
-Servo myservo;      
-int Echo = A4;  
-int Trig = A5; 
-int ledPin = 13;
-int trig = 9;
-int echo = 8;
-int cicalino = 4;
-float durata;
-float distanza;
+#define ECHO 8      // Pin per ricezione del segnale al sensore a ultrasuoni
+#define TRIG 9      // Pin per trasmissione del segnale dal sensore a ultrasuoni
+#define LED 13      // Pin per LED
+#define CICALINO 4  // Pin per cicalino
+
+float durata;    // Variabile 
+float distanza;  // Variabile
 
 
 void setup() {
