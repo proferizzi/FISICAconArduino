@@ -1,5 +1,175 @@
 // GIORNATA DELL'ARTE GIUGNO 2021 - LICEO 
 
+
+// Inseguitore RADAR ACUSTICO
+// Sono previsti due servomotori: il primo (servo_scan) fa ruotare il sensore HC-SR04  
+// e il secondo (servo_track) si posizione all'angolo in cui c'è la distanza minima
+// Tutti i Serial.print() si possono eliminare. Servono solo per monitoraggio
+
+
+
+// °°°°°°°°°°°°°°°°°°° IMPOSTAZIONI INIZIALI
+
+#include <Servo.h>
+
+#define echoPin 11 // attach pin D2 Arduino to pin Echo of HC-SR04
+#define trigPin 10 //attach pin D3 Arduino to pin Trig of HC-SR04
+#define DIM_ARRAY 17 // da 10  a 170 °
+#define STEP 10
+
+int distance,distance_1, dist_min; // variable for the distance measurement
+int array_dist[DIM_ARRAY] ; 
+
+Servo servo_scan, servo_track;
+int i,k;
+int ang_min;
+int n;
+
+
+void setup() {
+  servo_scan.attach(7);
+  servo_track.attach(13);
+  pinMode(trigPin, OUTPUT); // Set trigPin as  OUTPUT
+  pinMode(echoPin, INPUT); // Sets echoPin aa INPUT
+  Serial.begin(9600); // // Serial @ 9600 baudrate 
+  for(k=0;k<DIM_ARRAY;k++){
+    i=10+k*STEP;
+    servo_scan.write(i);
+    delay(50); 
+    distance = misura_distanza();
+    array_dist[k] = distance; // riempio l'array                       
+  }
+  dist_min=400;                
+  for(k=0;k<DIM_ARRAY;k++){
+    if(array_dist[k]<dist_min){
+      dist_min=array_dist[k];
+      i=10+k*STEP; 
+    }
+   //Serial.print(array_dist[k]);
+   //Serial.print("-");                                        
+  }
+  //Serial.println("");
+  //Serial.print("dist_min_iniziale:");
+  //Serial.print(dist_min); 
+  //Serial.print(" at:");
+  //Serial.println(i);
+  //Serial.println("--------------"); 
+  servo_track.write(i); // aggiorno il tracciamento
+  delay(60);                  
+}
+
+
+
+
+// °°°°°°°°°°°°°°°°°°°°°°° PARTE ESECUTIVA PRINCIPALE DEL PROGRAMMA
+
+void loop() {
+  distance=misura_distanza(); // fittizia  
+  //Serial.println("--------------");
+  //Serial.print("dist_inizio_loop:");
+  //Serial.println(dist_min);  
+  //Serial.println("--------------");
+  for(k=0;k<DIM_ARRAY;k++){        
+    i=10+k*STEP;
+    servo_scan.write(i);
+    delay(60); 
+    distance = misura_distanza();
+    //Serial.print("dist:");
+    //Serial.println(distance);
+    if(distance>0 && distance<(dist_min-2) ){ // aggiorno ma con cautela
+      dist_min=distance;
+      ang_min=i; 
+      servo_track.write(i); // aggiorno il  tracciamento
+      delay(60);
+      //Serial.println("-------------");
+      //Serial.print("d_min:");
+      //Serial.print(dist_min);
+      //Serial.print(" at:");
+      //Serial.println(i);
+      //Serial.println("-------------");
+    }
+    array_dist[k] = distance; // riempio l'array  
+    if(k==0) array_dist[k]=400;   // per evitare un errore del sensore      
+  }
+  dist_min=400;  // perchè fisso il minimo al valore massimo ?     
+  array_dist[0]=400;  // per evitare un errore del sensore                
+  for(k=0;k<DIM_ARRAY;k++){
+    if(array_dist[k]<(dist_min-2)){
+      dist_min=array_dist[k];
+      i=10+k*STEP; 
+    }
+  }
+  servo_track.write(i);
+  //Serial.print("Fine ciclo: ");
+  //Serial.print(dist_min);
+  //Serial.print(" at:");
+  //Serial.println(i);
+  //Serial.println("......");      
+}
+
+
+
+// °°°°°°°°°°°°°°°°°°°°°°°°°° FUNZIONI AUSILIARIE
+
+int misura_distanza(void){
+  long durata;
+  int dist;
+  digitalWrite(trigPin, LOW);// azzera trigPin
+  delayMicroseconds(5);   // tieno a zero per 5 microsec
+  digitalWrite(trigPin, HIGH);// Alza trigPin per 15 microseconds
+  delayMicroseconds(15);
+  digitalWrite(trigPin, LOW);// Abbassa trigPin
+  durata = pulseIn(echoPin, HIGH); // durata dell'impulso su echoPin
+  dist= durata/58;  // DA DOVE ESCE QUESTO 58 ? (velocità del suono ... andata e ritorno...)
+  if(dist>400) dist=400; // max 4m di default per non avere misure assurde
+  return dist;   
+}
+
+
+
+
+// Fonte: Un ringraziamento a Leonardo (Bibliolab Concesio)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// °°°°°°°°°°°°°°°°°°°°°° ALTRO CODICE NON USATO, MA SIMILE
+
+
+/*
+
 // RADAR CON SERVO, SENSORE A ULTRASUONI, CICALINO E LED  
 
 #define ECHO 8      // Pin per ricezione del segnale al sensore a ultrasuoni
@@ -64,3 +234,6 @@ int readDistanza() {
 
 // Fonti:  https://www.youtube.com/watch?v=QEpUTYRSftY
 //         https://www.youtube.com/watch?v=xbvMzptK8H8
+
+
+*/
