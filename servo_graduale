@@ -1,0 +1,62 @@
+// Movimento graduale di servomotore
+
+
+// °°°°°°°°°° IMPOSTAZIONI INIZIALI
+#include <Servo.h>
+
+#define PINSERVO 6
+#define PINPOTENZIOMETRO A1
+
+Servo mio_servo;
+
+
+void setup() {
+  pinMode(PINSERVO, OUTPUT);
+  mio_servo.attach(PINSERVO);
+  mio_servo.write(90);
+  
+  //Serial.begin(9600);  // per debug
+  pinMode(5, OUTPUT);  // per alimentare il potenziometro
+  digitalWrite(5, HIGH);
+}
+
+
+
+// °°°°°°°°°°°° ESECUZIONE PRINCIPALE 
+void loop() {
+  int x = map(analogRead(PINPOTENZIOMETRO),0,1023,10,200); 
+  //Serial.println(x);
+  servo_graduale(x, 60, 120);
+  delay(500);
+  x = map(analogRead(PINPOTENZIOMETRO),0,1023,10,200); 
+  servo_graduale(x, 120, 60);
+  delay(500);
+}
+
+
+
+// °°°°°°°°°°° FUNZIONI AUSILIARIE
+void servo_graduale(const int tempo, int inizio, int fine){
+  bool option = 0;
+  if(fine > inizio){
+    option = 0;  // variabile per stato angolo iniziale minore di quello finale
+  }
+ else{
+  option = 1;  
+ }
+ if(!option){
+   for(int i=inizio; i<fine; i++){
+     mio_servo.write(i);
+     delay(tempo);  
+   }
+ }else{
+   for(int j=inizio; j>fine; j--){
+     mio_servo.write(j);
+     delay(tempo);  
+   }
+ }
+}
+
+
+// Fonte WRKits https://www.youtube.com/watch?v=F0IfgFjVNnc
+// testato a giugno 2021, ok
