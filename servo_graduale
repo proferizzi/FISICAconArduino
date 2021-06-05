@@ -1,4 +1,7 @@
-// Movimento graduale di servomotore
+// Movimento graduale di servomotore - rotazione costante oraria/antioraria
+// con potenziometro per controllare la velocità di rotazione ad ogni mezzo giro
+// e possibilità nello sketch di modificare valori max e min di angoli e velocità
+
 
 
 // °°°°°°°°°° IMPOSTAZIONI INIZIALI
@@ -6,9 +9,12 @@
 
 #define PINSERVO 6
 #define PINPOTENZIOMETRO A1
+#define VELMAX 100
+#define VELMIN 1
+#define ANGMIN 60
+#define ANGMAX 120
 
 Servo mio_servo;
-
 
 void setup() {
   pinMode(PINSERVO, OUTPUT);
@@ -24,13 +30,13 @@ void setup() {
 
 // °°°°°°°°°°°° ESECUZIONE PRINCIPALE 
 void loop() {
-  int x = map(analogRead(PINPOTENZIOMETRO),0,1023,10,200); 
+  int x = map(analogRead(PINPOTENZIOMETRO),0,1023,VELMIN,VELMAX); 
   //Serial.println(x);
-  servo_graduale(x, 60, 120);
-  delay(500);
-  x = map(analogRead(PINPOTENZIOMETRO),0,1023,10,200); 
-  servo_graduale(x, 120, 60);
-  delay(500);
+  servo_graduale(x, ANGMIN, ANGMAX);
+  delay(100);
+  x = map(analogRead(PINPOTENZIOMETRO),0,1023,VELMIN,VELMAX); 
+  servo_graduale(x, ANGMAX, ANGMIN);
+  delay(100);
 }
 
 
@@ -58,5 +64,5 @@ void servo_graduale(const int tempo, int inizio, int fine){
 }
 
 
-// Fonte WRKits https://www.youtube.com/watch?v=F0IfgFjVNnc
+// Fonte di partenza WRKits https://www.youtube.com/watch?v=F0IfgFjVNnc
 // testato a giugno 2021, ok
