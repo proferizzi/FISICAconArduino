@@ -11,7 +11,7 @@
 // 4) RISOLVI - usiamo l'oscilloscopio per la misura frequenza e periodo 
 // 4) ESEGUI - eseguiamo frontalmente l'esperimento 
 
-// APPLICAZIONE in meccanica: la velocità di un motorino in corrente continua cambia in base alla percentuale calcolata 
+// APPLICAZIONE in meccanica: la velocità di un motorino in corrente continua cambia in base alla % calcolata 
 //                            vedere link qui https://t.me/esperimentopiubello/24 però ci vuole login a Telegram
 
 // mappatura dell'hardware
