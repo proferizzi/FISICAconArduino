@@ -11,9 +11,11 @@
 //              poi con la calcolatrice stimiamo in percentuale il rapporto tra i due intervalli di tempo 
 // 4) ESEGUI - esecuzione frontale dell'esperimento e risposta immediata di qualsiasi dubbio emergente dagli allievi/e
 
+// APPLICAZIONE in meccanica: la velocità di un motorino in corrente continua 
+//                            cambia in base alla percentuale calcolata https://t.me/esperimentopiubello/24
 
 // mappatura dell'hardware
-#define pwmOut (1<<PD3)  // pin digitale 3
+#define pwmOut (1<<PD3)  // pin digitale 3             
 
 // prototipo di funzioni
 void setDuty_pin03(float valueD);
@@ -51,3 +53,4 @@ void setFreq(char option){ // 1 ---> 62,5 kHz *** 2 ---> 7,81 kHz *** 3 ---> 1,9
 
 
 // Fonte WRKits https://www.youtube.com/watch?v=SOc1KOUvrgk
+
