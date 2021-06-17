@@ -11,8 +11,8 @@
 //              poi con la calcolatrice stimiamo in percentuale il rapporto tra i due intervalli di tempo 
 // 4) ESEGUI - esecuzione frontale dell'esperimento e risposta immediata di qualsiasi dubbio emergente dagli allievi/e
 
-// APPLICAZIONE in meccanica: la velocità di un motorino in corrente continua 
-//                            cambia in base alla percentuale calcolata https://t.me/esperimentopiubello/24
+// APPLICAZIONE in meccanica: la velocità di un motorino in corrente continua cambia in base alla percentuale calcolata 
+//                            vedere link qui https://t.me/esperimentopiubello/24 però ci vuole login a Telegram
 
 // mappatura dell'hardware
 #define pwmOut (1<<PD3)  // pin digitale 3             
