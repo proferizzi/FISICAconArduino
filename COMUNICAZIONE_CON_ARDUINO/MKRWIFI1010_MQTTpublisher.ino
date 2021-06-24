@@ -2,9 +2,12 @@
 
 // MQTT PUBLISHER con MKR WiFi-1010
 
-#include "secrets.h"         
+//#include "secrets.h"         
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
+
+const char WIFI_SSID[] = "ReteRizzi";
+const char WIFI_PASS[] = "";
 
 WiFiClient wifi;
 int status = WL_IDLE_STATUS;
@@ -42,7 +45,7 @@ void setup() {
 void loop() {
   dt = millis() - t1;
   if(dt > 2000){
-    if((stato%2) == 0){
+    if((stato%2) == 0){  // Divide per due e controlla il resto
       client.publish("/prova", "on"); Serial.println("on");
     }else{
       client.publish("/prova", "off"); Serial.println("off");
@@ -57,6 +60,7 @@ void loop() {
 
 
 // Fonte Aliverti https://www.youtube.com/watch?v=cLRuWwKkSp4
+//                e per secrets.h https://www.youtube.com/watch?v=k5HJ6G0YeWw
 
 
 
