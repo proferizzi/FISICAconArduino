@@ -1,17 +1,17 @@
-// Punto di Accesso + Server Web     3/3
+// Punto di Accesso + Server Web
 
 
 //#include <ESP8266WiFi.h>       // Librerie per gestire il Server
 //#include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
-const char *wifi_ssid = "Rete_per_condividere_dati";   // Rete generata dal Punto di Accesso
-const char *wifi_password = "";
-IPAddress ip(192,168,11,4);                             // Indirizzo IP e settaggio rete
+const char *wifi_ssid = "Rete_Rizzi";   // Rete generata dal Punto di Accesso
+const char *wifi_password = "";         // Nessuna password
+IPAddress ip(192,168,11,4);             // Indirizzo IP e settaggio rete
 IPAddress gateway(192,168,11,1);
 IPAddress subnet(255,255,255,0);
 
-ESP8266WebServer server(80);       // Creazione dell'oggetto server in ascolto su porta 80
+ESP8266WebServer server(80);   // Creazione dell'oggetto server in ascolto su porta 80
 
 int n1 = 0;      // Variabili per salvare i dati ricevuti dai client
 int x1 = 0;
@@ -94,7 +94,6 @@ void gestisciAggiornamento2() {                   // I dati passano come argomen
   //Serial.print("x2 = "); Serial.println(x2);
   server.send(200,"text/plain","Dati aggiornati dal Client 2");
 }
-
 
 
 
