@@ -1,79 +1,11 @@
-// Esperimento: GENERATORE DI ONDA TRIANGOLARE
-
-// Modulo con chip PCF8591 - Convertitore analogico digitale DAC (Vcc = +5V) 
-
-// Per vedere l'onda su PC con Plotter Seriale il terminale OUT del modulo va sul pin analogico A0 
-// Altrimenti usare oscilloscopio
-
-
-#include "Wire.h"
-#define PCF8591 (0x48 >> 1) // I2C bus address
-
-
-void setup(){
-  //Serial.begin(9600);
-  Wire.begin();
-}
-
-
-void loop(){
-  int x;
-  for (int i=0; i<200; i++){
-    Wire.beginTransmission(PCF8591); // wake up PCF8591
-    Wire.write(0x40); // control byte - turn on DAC (binary 1000000)
-    Wire.write(100*i); // value to send to DAC
-    Wire.endTransmission(); // end tranmission
-    x = analogRead(0);
-    //Serial.println(x);
-  }
-
-  for (int i=199; i>=0; --i){
-    Wire.beginTransmission(PCF8591); // wake up PCF8591
-    Wire.write(0x40); // control byte - turn on DAC (binary 1000000)
-    Wire.write(100*i); // value to send to DAC
-    Wire.endTransmission(); // end tranmission
-    x = analogRead(0);
-    //Serial.println(x);
-  }
-}
-
-
-// Fonte https://tronixstuff.com/2013/06/17/tutorial-arduino-and-pcf8591-adc-dac-ic/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-// ESPERIMENTO #4
-// Testato giugno 2020, ok con oscilloscopio in accoppiamento AC oppure DC 
+// ESPERIMENTO onda sinusoidale
+// Testato giugno 2021, ok con oscilloscopio, screenshot su Dropbox
 // esce onda con bassa frequenza 1,60 Hz e 0,430 Vpp se manteniamo serial print
-// senza serial print esce a 24 Hz e 0,412 Vpp però ho messo limite banda 20 MHz per togliere rumore, file 25
+// senza serial print esce a 24 Hz e 0,412 Vpp però ho messo limite banda 20 MHz per togliere rumore
 
-
-// GENERATORE DI ONDA SINUSOIDALE
-
-// Modulo con chip PCF8591 - Convertitore analogico digitale DAC (Vcc = +5V) 
 
 // Per vedere l'onda su PC con Plotter Seriale il terminale OUT del modulo va sul pin analogico A0 
-// Altrimenti usare oscilloscopio. Col dso138 si vede direi bene!
+// Altrimenti usare oscilloscopio. Col dso138 si vede direi bene
 
 
 #include "Wire.h"
@@ -120,22 +52,60 @@ void loop(){
 // Fonte https://tronixstuff.com/2013/06/17/tutorial-arduino-and-pcf8591-adc-dac-ic/
 //       poi modificata con https://daycounter.com/Calculators/Sine-Generator-Calculator.phtml
 
+
+
+
+
+
+
+
+
+
+/*
+
+// Esperimento: GENERATORE DI ONDA TRIANGOLARE
+
+// Modulo con chip PCF8591 - Convertitore analogico digitale DAC (Vcc = +5V) 
+
+// Per vedere l'onda su PC con Plotter Seriale il terminale OUT del modulo va sul pin analogico A0 
+// Altrimenti usare oscilloscopio
+
+
+#include "Wire.h"
+#define PCF8591 (0x48 >> 1) // I2C bus address
+
+
+void setup(){
+  //Serial.begin(9600);
+  Wire.begin();
+}
+
+
+void loop(){
+  int x;
+  for (int i=0; i<200; i++){
+    Wire.beginTransmission(PCF8591); // wake up PCF8591
+    Wire.write(0x40); // control byte - turn on DAC (binary 1000000)
+    Wire.write(100*i); // value to send to DAC
+    Wire.endTransmission(); // end tranmission
+    x = analogRead(0);
+    //Serial.println(x);
+  }
+
+  for (int i=199; i>=0; --i){
+    Wire.beginTransmission(PCF8591); // wake up PCF8591
+    Wire.write(0x40); // control byte - turn on DAC (binary 1000000)
+    Wire.write(100*i); // value to send to DAC
+    Wire.endTransmission(); // end tranmission
+    x = analogRead(0);
+    //Serial.println(x);
+  }
+}
+
+
+// Fonte https://tronixstuff.com/2013/06/17/tutorial-arduino-and-pcf8591-adc-dac-ic/
+
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -213,19 +183,6 @@ void loop(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 
 // Presumo Modulo PCF8591 usato per conversione da analogico a digitale
@@ -260,8 +217,3 @@ void loop()
 }
 
 */
-
-
-
-
-
