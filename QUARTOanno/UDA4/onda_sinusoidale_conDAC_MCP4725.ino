@@ -378,6 +378,7 @@ void loop(void) {
 /*
 
 // Esperimento di test per generare manualmente segnali con potenziometro
+// Testato a giugno 2021, ok, screenshot su Dropbox
 
 #include <Wire.h>
 #include <Adafruit_MCP4725.h>
