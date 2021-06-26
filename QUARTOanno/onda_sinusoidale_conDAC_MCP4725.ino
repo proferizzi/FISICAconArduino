@@ -1,19 +1,13 @@
 // ESPERIMENTO: GENERARE ONDA SINUSOIDALE CON UN DAC E VEDERLA SULL'OSCILLOSCOPIO
-// Testato giugno 2020 ok con oscilloscopio in accoppiamento AC esce onda a 12,89 Hz e 4,80 Vpp
-// Salvati screenshot su pendrive, numeri files 17 e 18
-// usato modulo blu ma penso sia lo stesso per gli altri
-
-
-// Programa: Onda Senoidal MCP4725 usata per far lampeggiare un LED
-// Alteracoes e adaptacoes: Arduino e Cia
-// Baseado no programa de exemplo Sineware - Adafruit
+// Testato giugno 2020 e anche giugno 2021 ok con oscilloscopio esce onda a 12,89 Hz e 4,80 Vpp
+// Salvati su Dropbox gli screenshots
+// usato modulo blu ma penso sia lo stesso per gli altri, ne ho in totale 5
 
 #include <Wire.h>
 #include <Adafruit_MCP4725.h>
 
 Adafruit_MCP4725 dac;
 
-//Define a resolucao
 #define DAC_RESOLUTION (9)
 
 const PROGMEM uint16_t DACLookup_FullSine_9Bit[512] = {
@@ -84,10 +78,8 @@ const PROGMEM uint16_t DACLookup_FullSine_9Bit[512] = {
 };
 
 void setup(void){
-  //Serial.begin(9600);  //Serial.println("Gerando onda senoidal");
-  //Inicializa o MCP4725 no endereco 0x60 (oppure 61, provare con sketch i2c_scanner)
-  dac.begin(0x60);
-  
+  //Serial.begin(9600);  //Serial.println("Gerando onda senoidal");  // Per debug
+  dac.begin(0x60);    // Endereco 0x60 (oppure 61, provare con sketch i2c_scanner)
 }
 
 void loop(){
@@ -100,7 +92,6 @@ void loop(){
 }
 
 // Fonte https://www.arduinoecia.com.br/processing-conversor-digital-analogico-dac-mcp4725/
-
 
 
 
