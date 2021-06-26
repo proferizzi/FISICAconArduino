@@ -156,10 +156,11 @@ void loop(){
 
 // ESPERIMENTO BIS: generare onda sinusoidale con risoluzione selezionabile 
 //                  da potenziometro, casi possibili 5, 6, 7, 8 oppure 9 bit
-// Testato giugno 2021, ok
+// Testato giugno 2021, ok. screenshots e foto su Dropbox
 // per 9 bit esce onda a 12,2 Hz          // per 8 bit esce onda a 24,4 Hz 
 // per 7 bit esce onda a 48,6 Hz          // per 6 bit esce onda a 96,7 Hz 
 // per 5 bit esce onda a 191 Hz 
+
 
 
 #include <Wire.h>
