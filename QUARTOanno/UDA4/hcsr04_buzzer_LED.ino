@@ -1,4 +1,5 @@
-// NB se si usa un BUZZER con resistore "102" è 1 kOhm e con transistor forse è un pnp S8550 / 2ty
+// NB se si usa un BUZZER con resistore "102" è 1 kOhm
+// e inoltre se ha transistor (forse un pnp S8550 / 2ty) è per evitare che sia arduino a fornire la corrente dal suo pin
 
 
 // hcsr04, buzzer e led
