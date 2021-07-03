@@ -1,299 +1,4 @@
 
-// Generatore di onde sinusoidali (e quadre) con frequenza selezionabile
-// da zero a 40 MHz usando un encoder rotativo, un pulsante e un display I2C LCD1206
-
-
-// °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° IMPOSTAZIONI INIZIALI
-byte stato = 0;            // macchina a stati
-boolean FIRST = true;
-byte modo = 0;
-
-unsigned long t1, t2, dt;  // timer non bloccanti
-
-#define encoderPinA  2   // encoder
-#define encoderPinB  3
-volatile long pos = 0;
-
-#include <AD9850.h>         // DAC
-const int W_CLK_PIN = 6;
-const int FQ_UD_PIN = 7;
-const int DATA_PIN = 8;
-const int RESET_PIN = 9;
-double freq = 1000;
-double step = 1;
-double trimFreq = 124999500;
-int phase = 0;
-
-#include <Wire.h>     // display
-#include <LCD03.h>
-LCD03 lcd;
-
-
-void setup(){
-  //Serial.begin(9600);    // seriale per debug
-  
-  pinMode(encoderPinA, INPUT_PULLUP);  // encoder
-  pinMode(encoderPinB, INPUT_PULLUP);
-  pinMode(4, INPUT_PULLUP);
-  attachInterrupt(0, doEncoderA, CHANGE);
-  attachInterrupt(1, doEncoderB, CHANGE);
-
-  DDS.begin(W_CLK_PIN, FQ_UD_PIN, DATA_PIN, RESET_PIN);  // DAC
-  DDS.calibrate(trimFreq);
-  DDS.down();
-
-  lcd.begin(16, 2);           //display 
-  lcd.backlight(); 
-  lcd.print("Hello world");   // per debug, se non va provare I2C scanner
-  delay(3000);   
-  lcd.clear();                    
-}
-
-
-// °°°°°°°°°°°°°°°°°°°°°°°°°°°°°° PARTE ESECUTIVA PRINCIPALE
-void loop(){
-  switch(stato){
-    case 0:
-      sceglimodo();
-      break;  
-    case 1:
-      setFreq();
-      break;  
-    case 2:
-      setStep();
-      break;
-    case 3:
-      setRun();
-      break;    
-  }
-  if ((millis()-t2) > 200) {
-    lcd.begin(16, 2);           //display 
-    lcd.backlight();
-    lcd.clear();
-    t2 = millis();
-  }
-}
-
-
-// °°°°°°°°°°°°°°°°°°°°°°°°°° FUNZIONI AUSILIARIE
-void sceglimodo(){
-  if (FIRST) {
-    FIRST = false;  
-    t1 = millis();
-  }
-  dt = millis() -t1;
-  if (dt > 200) {
-    if (pos > 0) {
-      modo++;
-      if (modo >= 2) modo = 2;  
-    }
-    if (pos < 0) {
-      modo--;  
-      if (modo < 0) modo = 0;
-    }
-    pos = 0;
-
-    if (modo == 0) {
-      lcd.home();
-      lcd.print("Imposta freq.");
-    } else if (modo == 1) {
-      lcd.print("Imposta passo");
-    } else if (modo == 2) {
-      lcd.print("Inizio?");
-    } 
-
-    t1 = millis();
-  }
-
-  if (!digitalRead(4)) {
-    go(modo+1);
-    delay(300);
-  }
-}
-
-void go(int st){
-  stato = st;
-  FIRST = true;  
-}
-
-
-//char str[11];
-
-void setFreq(){
-  if (FIRST) {
-    FIRST = false;  
-    lcd.clear(); 
-    t1 = millis();
-  }
-
-  dt = millis() - t1;
-  if (dt > 200) {
-      if (pos > 0) {
-        freq += step;     
-      }
-      if (pos < 0) {
-        freq -= step;
-        if (freq <= 1) freq = 1;
-      }
-      pos = 0;
-
-      lcd.home();
-      lcd.print("f = ");
-      lcd.print(freq);
-      
-      t1 = millis();
-  }
-
-  if (!digitalRead(4)) {
-    go(0);
-    lcd.clear();
-    delay(300);
-  }
-}
-
-void setStep(){
-  if (FIRST) {
-    FIRST = false;
-    lcd.clear(); 
-    t1 = millis();
-  }
-  dt = millis() - t1;
-  if (dt > 200) {    
-    if (pos > 0) {
-      if (step == 1) step = 10.0;
-      else step = step*10.0;     
-    }
-    if ((pos < 0) && (step > 1.0)) {
-      step = step / 10.0;      
-    }
-    pos = 0;
-       
-    lcd.home();
-    lcd.print("passo = ");
-    lcd.print(step);
-    
-    t1 = millis();
-  }
-
-  if (!digitalRead(4)) {
-    go(0);
-    lcd.clear();
-    delay(300);
-  }
-}
-
-void setRun(){
-  if (FIRST) {
-    FIRST = false;  
-    lcd.clear();
-    lcd.home();
-    lcd.print("Attivo con f = ");
-    lcd.print(freq);
-    
-    DDS.up();
-    DDS.setfreq(freq, phase);
-    t1 = millis();
-  }
-  dt = millis() - t1;
-  if (dt > 200) {   
-    if (pos > 0) {
-      freq += step; 
-      DDS.setfreq(freq, phase);          
-    }
-    if (pos < 0) {
-      freq -= step;
-      if (freq <= 1) freq = 1;
-      DDS.setfreq(freq, phase);      
-    }
-    pos = 0;
-
-    lcd.home();
-    lcd.print("f = ");
-    lcd.print(freq);
-    
-    t1 = millis();
-  }
-
-  if (!digitalRead(4)) {
-    go(0);
-    DDS.down();
-    lcd.clear();
-    delay(300);
-  }
-}
-
-void inc() {
-  pos++;
-}
-void dec() {
-  pos--;
-}
-
-void doEncoderA() {
-  // look for a low-to-high on channel A
-  if (digitalRead(encoderPinA) == HIGH) {
-    // check channel B to see which way encoder is turning
-    if (digitalRead(encoderPinB) == LOW) {
-      //pos = pos + 1;         // CW
-      inc();
-    } else {
-      dec();
-      //pos = pos - 1;         // CCW
-    }
-  } else {// look for a high-to-low on channel A
-    if (digitalRead(encoderPinB) == HIGH) {// check channel B to see which way encoder is turning
-      inc(); 
-      //pos = pos + 1;          // CW
-    } else {
-      //pos = pos - 1;          // CCW
-      dec();
-    }
-  }  
-}
-
-void doEncoderB() {
-  // look for a low-to-high on channel B
-  if (digitalRead(encoderPinB) == HIGH) {
-    // check channel A to see which way encoder is turning
-    if (digitalRead(encoderPinA) == HIGH) {
-      //pos = pos + 1;         // CW
-      inc();
-    } else {
-      dec();
-      //pos = pos - 1;         // CCW
-    }
-  } else { // Look for a high-to-low on channel B
-    // check channel B to see which way encoder is turning
-    if (digitalRead(encoderPinA) == LOW) {
-      inc();
-      //pos = pos + 1;          // CW
-    } else {
-      dec();
-      //pos = pos - 1;          // CCW
-    }
-  }
-}
-
-
-// Fonte Aliverti https://www.youtube.com/watch?v=aQ8mca-piR4
-// Fonte encoder rotativo https://playground.arduino.cc/Main/RotaryEncoders/#Waveform
-// Fonte per libreria del DAC https://github.com/F4GOJ/AD9850
-// Fonte Aliverti per LCD1602 https://www.youtube.com/watch?v=cbCw3M8a1Pk
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
 
 // AD9850 generatore di funzioni a frequenza variabile
 // novembre 2020: inseriti due encoder rotativi e usato il pulsante di uno di essi
@@ -569,12 +274,357 @@ void format(long value) {
 
 // Fonte wrkits https://www.youtube.com/watch?v=Zw4dzSuapsY
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+// Generatore di onde sinusoidali (e quadre) con frequenza selezionabile
+// da zero a 40 MHz usando un encoder rotativo, un pulsante e un display I2C LCD1206
+
+
+// °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° IMPOSTAZIONI INIZIALI
+byte stato = 0;            // macchina a stati
+boolean FIRST = true;
+byte modo = 0;
+
+unsigned long t1, t2, dt;  // timer non bloccanti
+
+#define encoderPinA  2   // encoder
+#define encoderPinB  3
+volatile long pos = 0;
+
+#include <AD9850.h>         // DAC
+const int W_CLK_PIN = 6;
+const int FQ_UD_PIN = 7;
+const int DATA_PIN = 8;
+const int RESET_PIN = 9;
+double freq = 1000;
+double step = 1;
+double trimFreq = 124999500;
+int phase = 0;
+
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+
+void setup(){
+  //Serial.begin(9600);    // seriale per debug
+  
+  pinMode(encoderPinA, INPUT_PULLUP);  // encoder
+  pinMode(encoderPinB, INPUT_PULLUP);
+  pinMode(4, INPUT_PULLUP);
+  attachInterrupt(0, doEncoderA, CHANGE);
+  attachInterrupt(1, doEncoderB, CHANGE);
+
+  DDS.begin(W_CLK_PIN, FQ_UD_PIN, DATA_PIN, RESET_PIN);  // DAC
+  DDS.calibrate(trimFreq);
+  DDS.down();
+  pinMode(12, OUTPUT);    
+  digitalWrite(12, HIGH);    
+
+  lcd.begin();           //display 
+  lcd.backlight();
+  lcd.home();
+  //lcd.print("Hello world");   // per debug, se non va provare I2C scanner
+  //delay(3000);   
+  lcd.clear(); 
+  pinMode(16, OUTPUT);    // analogico 2
+  digitalWrite(16, HIGH);                   
+}
+
+
+// °°°°°°°°°°°°°°°°°°°°°°°°°°°°°° PARTE ESECUTIVA PRINCIPALE
+void loop(){
+  switch(stato){
+    case 0:
+      sceglimodo();
+      break;  
+    case 1:
+      setFreq();
+      break;  
+    case 2:
+      setStep();
+      break;
+    case 3:
+      setRun();
+      break;    
+  }
+  if ((millis()-t2) > 200) {
+    lcd.begin();           //display 
+    lcd.backlight();
+    lcd.clear();
+    t2 = millis();
+  }
+}
+
+
+// °°°°°°°°°°°°°°°°°°°°°°°°°° FUNZIONI AUSILIARIE
+void sceglimodo(){
+  if (FIRST) {
+    FIRST = false;  
+    t1 = millis();
+  }
+  dt = millis() -t1;
+  if (dt > 200) {
+    if (pos > 0) {
+      modo++;
+      if (modo >= 2) modo = 2;  
+    }
+    if (pos < 0) {
+      modo--;  
+      if (modo < 0) modo = 0;
+    }
+    pos = 0;
+
+    if (modo == 0) {
+      lcd.home();
+      lcd.print("Imposta freq.");
+    } else if (modo == 1) {
+      lcd.print("Imposta passo");
+    } else if (modo == 2) {
+      lcd.print("Inizio?");
+    } 
+
+    t1 = millis();
+  }
+
+  if (!digitalRead(4)) {
+    go(modo+1);
+    delay(300);
+  }
+}
+
+void go(int st){
+  stato = st;
+  FIRST = true;  
+}
+
+
+//char str[11];
+
+void setFreq(){
+  if (FIRST) {
+    FIRST = false;  
+    lcd.clear(); 
+    t1 = millis();
+  }
+
+  dt = millis() - t1;
+  if (dt > 200) {
+      if (pos > 0) {
+        freq += step;     
+      }
+      if (pos < 0) {
+        freq -= step;
+        if (freq <= 1) freq = 1;
+      }
+      pos = 0;
+
+      lcd.home();
+      lcd.print("f = ");
+      lcd.print(freq);
+      
+      t1 = millis();
+  }
+
+  if (!digitalRead(4)) {
+    go(0);
+    lcd.clear();
+    delay(300);
+  }
+}
+
+void setStep(){
+  if (FIRST) {
+    FIRST = false;
+    lcd.clear(); 
+    t1 = millis();
+  }
+  dt = millis() - t1;
+  if (dt > 200) {    
+    if (pos > 0) {
+      if (step == 1) step = 10.0;
+      else step = step*10.0;     
+    }
+    if ((pos < 0) && (step > 1.0)) {
+      step = step / 10.0;      
+    }
+    pos = 0;
+       
+    lcd.home();
+    lcd.print("passo = ");
+    lcd.print(step);
+    
+    t1 = millis();
+  }
+
+  if (!digitalRead(4)) {
+    go(0);
+    lcd.clear();
+    delay(300);
+  }
+}
+
+void setRun(){
+  if (FIRST) {
+    FIRST = false;  
+    lcd.clear();
+    lcd.home();
+    lcd.print("Attivo con");
+    lcd.setCursor(1,0);
+    lcd.print("f = ");
+    lcd.print(freq);
+    
+    DDS.up();
+    DDS.setfreq(freq, phase);
+    t1 = millis();
+  }
+  dt = millis() - t1;
+  if (dt > 200) {   
+    if (pos > 0) {
+      freq += step; 
+      DDS.setfreq(freq, phase);          
+    }
+    if (pos < 0) {
+      freq -= step;
+      if (freq <= 1) freq = 1;
+      DDS.setfreq(freq, phase);      
+    }
+    pos = 0;
+
+    lcd.home();
+    lcd.print("f = ");
+    lcd.print(freq);
+    
+    t1 = millis();
+  }
+
+  if (!digitalRead(4)) {
+    go(0);
+    DDS.down();
+    lcd.clear();
+    delay(300);
+  }
+}
+
+void inc() {
+  pos++;
+}
+void dec() {
+  pos--;
+}
+
+void doEncoderA() {
+  // look for a low-to-high on channel A
+  if (digitalRead(encoderPinA) == HIGH) {
+    // check channel B to see which way encoder is turning
+    if (digitalRead(encoderPinB) == LOW) {
+      //pos = pos + 1;         // CW
+      inc();
+    } else {
+      dec();
+      //pos = pos - 1;         // CCW
+    }
+  } else {// look for a high-to-low on channel A
+    if (digitalRead(encoderPinB) == HIGH) {// check channel B to see which way encoder is turning
+      inc(); 
+      //pos = pos + 1;          // CW
+    } else {
+      //pos = pos - 1;          // CCW
+      dec();
+    }
+  }  
+}
+
+void doEncoderB() {
+  // look for a low-to-high on channel B
+  if (digitalRead(encoderPinB) == HIGH) {
+    // check channel A to see which way encoder is turning
+    if (digitalRead(encoderPinA) == HIGH) {
+      //pos = pos + 1;         // CW
+      inc();
+    } else {
+      dec();
+      //pos = pos - 1;         // CCW
+    }
+  } else { // Look for a high-to-low on channel B
+    // check channel B to see which way encoder is turning
+    if (digitalRead(encoderPinA) == LOW) {
+      inc();
+      //pos = pos + 1;          // CW
+    } else {
+      dec();
+      //pos = pos - 1;          // CCW
+    }
+  }
+}
+
+
+// Fonte Aliverti https://www.youtube.com/watch?v=aQ8mca-piR4
+// Fonte encoder rotativo https://playground.arduino.cc/Main/RotaryEncoders/#Waveform
+// Fonte per libreria del DAC https://github.com/F4GOJ/AD9850
+// Fonte Aliverti per LCD commento in corso Aliverti 219, diverso dallo sketch
+// ecco qui http://scienceclub.org.au/download/1602-lcd-display-serial-connection-arduino-library/
+// Inoltre: modifica mia per VCC e GND su pin analogici, non dimenticare i2cscanner.ino
+
 */
 
 
 
-
-
+/*
+// i2c_scanner
+#include <Wire.h>
+    
+void setup(){
+  Wire.begin();
+  Serial.begin(9600);
+  while(!Serial);             
+  Serial.println("\nI2C Scanner");
+}
+    
+void loop(){
+  byte error, address;
+  int nDevices;
+  Serial.println("Scanning...");   
+  nDevices = 0;
+  for(address = 1; address < 127; address++ ){
+        // The i2c_scanner uses the return value of
+        // the Write.endTransmisstion to see if
+        // a device did acknowledge to the address.
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+    if (error == 0){
+      Serial.print("I2C device found at address 0x");
+      if (address<16) Serial.print("0");
+      Serial.print(address,HEX);
+      Serial.println("  !");
+      nDevices++;
+    }else if (error==4){
+          Serial.print("Unknown error at address 0x");
+          if (address<16) Serial.print("0");
+          Serial.println(address,HEX);
+    }    
+  }
+  if (nDevices == 0)  Serial.println("No I2C devices found\n");
+  else Serial.println("done\n");
+  delay(5000);           // wait 5 seconds for next scan
+}
+*/
 
 
 
