@@ -57,6 +57,7 @@ void loop() {
 
 // Fonte Aliverti https://www.youtube.com/watch?v=cLRuWwKkSp4
 //                e per secrets.h https://www.youtube.com/watch?v=k5HJ6G0YeWw
+// MKR1010 Hardware https://www.mischianti.org/it/2021/06/14/arduino-mkr-wifi-1010-piedinatura-ad-alta-risoluzione-e-specifiche/
 
 
 
