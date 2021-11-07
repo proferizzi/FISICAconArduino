@@ -1,7 +1,3 @@
-
-/*
-
-
 //  PRIMA LEGGE DI OHM con Monitor Seriale e Arduino come voltmetro
 //
 //  Materiale occorrente: 
@@ -37,8 +33,6 @@ void loop() {
   Serial.println(deltaV);
   delay(1000);
 }
-
-*/
 
 
 
@@ -269,7 +263,7 @@ void loop(){
 
 
 
-
+/*
 // OLED
 
     #include <SPI.h>  
@@ -329,11 +323,59 @@ void loop(){
     }  
 // Fonte: http://www.maffucci.it/2015/10/03/esercizio-arduino-in-60-minuti-usare-un-display-oled/
 // Fonte: https://www.instructables.com/id/An-Adruino-OLED-Voltmeter/
+*/
 
 
 
 
 
+
+
+
+/* -----------------------------------------------------------------------------------
+ ESPERIMENTO DI VERIFICA DELLA PRIMA LEGGE DI OHM
+ 
+ XXX Esempio creato partendo dal codice: ReadAnalogVoltage di pubblico dominio.
+ Legge un input di tipo analogico sul pin 0 e mostra il risultato sul Serial Monitor.
+ Mostriamo il valore letto solo quando cambia
+----------------------------------------------------------------------------------- */
+/*
+double prec_VoltValue=-5;
+// Funzione che arrotonda alla cifra-esima cifra decimale
+double Arrotonda(const double v , const int cifre)
+{
+  int i;
+    i=(int)(v*pow(10,cifre));
+    return((double)(i/pow(10,cifre))); 
+}
+// La routine di "setup" parte appena premo il tasto di reset:
+void setup() 
+{
+  // inizializza la comunicazione seriale a 9600 bit per secondo:
+  Serial.begin(9600);
+}
+
+// La loop routine continua a girare:
+void loop() 
+{
+  // Leggo l'input sul PIN A analogico 0:
+  int sensorValue = analogRead(A0);
+  // Converte la lettura (range da 0 a 1023) in voltaggi (0 - 5V):
+  double voltage = Arrotonda(sensorValue * (5.0 / 1023.0),1);
+  if ( abs(prec_VoltValue-voltage) > (5.0 / 1023) )  
+  {
+    // stampo il valore letto:
+    Serial.print("Valore sul sensore: ");
+    Serial.print(sensorValue);
+    Serial.print(" - Voltaggio: ");
+    Serial.println(voltage);
+    delay(2000);
+  }   
+  prec_VoltValue=voltage;
+}
+// Fonte brescianet.com
+
+*/
 
 
 
