@@ -16,7 +16,7 @@ int tmin = 20;
 unsigned long t = 0;
 
 
-volatile int stato = 0;
+volatile int stato = 2;
 const int PARTENZA = 0;
 const int FRENATA = 2;
 
