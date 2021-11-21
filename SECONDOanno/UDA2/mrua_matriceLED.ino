@@ -3,6 +3,8 @@
 // con accelerazione costante quadrato oppure
 // frenata fino a fermarsi con decelerazione opposta alla precedente
 
+// testato abbastanza ok
+
 #include <LedControl.h>
 
 LedControl lc=LedControl(12, 10, 11, 4);     // DIN, CLK, CS, numero matrici
