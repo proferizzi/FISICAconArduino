@@ -1,6 +1,6 @@
 // ESPERIMENTO DI MRUA CON SINGOLO LED IN MOTO
 // pulsante sul pin digitale 2 con interrupt per selezionare partenza da fermo
-// con accelerazione costante pari a circa 5 led al secondo quadrato oppure
+// con accelerazione costante quadrato oppure
 // frenata fino a fermarsi con decelerazione opposta alla precedente
 
 #include <LedControl.h>
