@@ -167,3 +167,95 @@ void loop(){
 // Fonte https://www.youtube.com/watch?v=EDYA7WZKhn8
 
 */
+
+
+
+
+
+
+
+
+/*
+
+// Esperimento #6: come il precedente ma con aggiunta del conteggio - da controllare
+
+int soglia = 0;   
+int const fsize = 10;    
+int fil[fsize];                       
+float avg = 0.0;
+
+int conteggio = 0;
+#define ON HIGH
+#define OFF LOW
+long t0 = 0;
+long t = 0;
+
+bool passaggio = false;
+bool prev_passaggio = false;
+bool count = false;
+long istante = 0;
+#define FINESTRA 2000
+int click = 0;
+
+
+void setup() {
+  Serial.begin(9600); 
+  avg = analogRead(A0);                
+  soglia = avg + 100;   
+  Serial.print("Soglia = "); Serial.println(soglia); 
+  pinMode(LED_BUILTIN, OUTPUT); 
+
+  conteggio = OFF;
+}
+
+
+void loop(){
+  avg = 0;
+  for(int j=0; j<fsize; j++){
+    fil[j] = analogRead(A0);
+    avg += (float)fil[j];
+  }
+  avg = avg / (float)(fsize);
+  //Serial.print(avg);    
+  //Serial.print(" "); Serial.println(soglia);  
+  if ((avg > soglia) && (conteggio == OFF)) { 
+    conteggio = ON;
+    t0 = millis();
+    Serial.print("Inizio");         
+    digitalWrite(LED_BUILTIN, HIGH);  
+    passaggio = true;
+    if(!prev_passaggio && passaggio){
+      Serial.println("salita");
+      prev_passaggio = passaggio;
+      if(!count){
+        count = true;
+        istante = millis();
+        Serial.println("start");
+        click = 0;
+      }
+    }
+  }
+  if ((avg < soglia) && (conteggio == ON)){
+    conteggio = OFF;
+    t = millis() - t0;
+    Serial.print(" - Fine - ");         
+    Serial.print("tempo = "); Serial.print(t); Serial.println(" millisecondi");                     
+    digitalWrite(LED_BUILTIN, LOW);
+    if(prev_passaggio && !passaggio){
+      Serial.println("discesa");
+      prev_passaggio = passaggio;
+      click++;
+    }
+  } 
+  if(count && ( (millis()-istante) > FINESTRA) ){
+    count = false;
+    Serial.println("fine");  
+    Serial.print("click = "); Serial.println(click); Serial.println("-----------");
+  }
+}
+
+// Fonte https://www.youtube.com/watch?v=EDYA7WZKhn8
+// Fonte https://www.youtube.com/watch?v=Utl1bhzv0dY&t=499s
+
+*/
+
