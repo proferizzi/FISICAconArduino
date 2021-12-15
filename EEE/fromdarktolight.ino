@@ -6,6 +6,8 @@
 
 // Esperimento #2 cosa è un fotoresistore? Senza usare Arduino vedi  https://www.tinkercad.com/things/iJByX5fTmzz  
 
+
+
 // Esperimento #3
 // 1) carica lo sketch seguente
 // 2) costruisci lo schema elettrico come mostrato a lavagna (oppure  https://www.tinkercad.com/things/cjDZhyVCYh9 )
@@ -30,15 +32,17 @@ void setup(){
                         // | uso Monitor Seriale o Plotter Seriale per visualizzare i dati. |
   
   x = analogRead(A0);    // | Qui avviene la misura del voltaggio dal pin analogico A0, |
-                         // | la sua conversione e assegnazione alla variabile x.                         |
+                         // | la sua conversione e assegnazione alla variabile x.                       
                            
   soglia = x + 100;      // | Autoimpostazione del valore di soglia. |
+  
+  pinMode(LED_BUILTIN, OUTPUT);  // | Per attivare LED integrato nella scheda. |
 } 
 
  
 void loop(){
   x = analogRead(A0);    // | La prima cosa ad ogni ciclo è misurare il voltaggio, |
-                         // | convertirlo e assegnarlo alla variabile x.           |                 |
+                         // | convertirlo e assegnarlo alla variabile x.           |          
 
   Serial.print(x);     // | Arduino invia tramite comunicazione seriale il dato x     |
                        // | e posso visualizzarlo grazie al Monitor Seriale o al      |
@@ -46,11 +50,13 @@ void loop(){
 
   Serial.print(" "); Serial.println(soglia);  // | Invia uno spazio vuoto e poi "soglia" |
   
-  if (x > soglia) {          // | Struttura di controllo per cui se x supera "soglia"  |
-    digitalWrite(13, HIGH);  // | allora il LED che si trova al pin digitale 13        |
-  }else{                     // | si accende, altrimenti si spegne. "HIGH" = 1 cioè    |
-    digitalWrite(13, LOW);   // | VCC cinque volt e "LOW" = 0 cioè GND o messa a terra |
+  if (x > soglia) {                  // | Struttura di controllo per cui se x supera "soglia"  |
+    digitalWrite(LED_BUILTIN, HIGH); // | allora il LED che si trova al pin digitale 13        |
+  }else{                             // | si accende, altrimenti si spegne. "HIGH" = 1 cioè    |
+    digitalWrite(LED_BUILTIN, LOW);  // | VCC cinque volt e "LOW" = 0 cioè GND o messa a terra |
   } 
+
+  delay(10); // | Istruzione bloccante, se i dati sono veloci aumentare (unità in millisecondi). |
 }
 
 
@@ -63,59 +69,38 @@ void loop(){
 
 /*
 
-// Esperimento #4: inserire filtro a media mobile 
+// Esperimento #4: come il precedente ma con aggiunta di filtro a media mobile 
 
-int x = 0;    // | Definisco una variabile x intera e la inizializzo a zero, essa conterrà |
-              // | un numero tra 0 e 1023 in quanto Arduino converte il voltaggio          |
-              // | in ingresso sul pin analogico in un numero intero a 10 bit.             |
-
-int soglia = 0;    // | Definisco "soglia" e la inizializzo a zero, |
-                   // | serve per la struttura di controllo "if".   |
-
-
-int const fsize = 4;    // | Ogni 4 valori letti fa la media e poi stampa:                  |
-int fil [fsize];        // | se aumenti il valore cala la prontezza ma è più dolce la linea |
-int i=0;                // | viceversa se diminuisci il valore 
+int soglia = 0;   
+int const fsize = 10;    
+int fil[fsize];                       
 float avg = 0.0;
 
 
 void setup() {
-  Serial.begin(9600);   // | Inizializzo la comunicazione seriale tra Arduino e PC:         |
-                        // | uso Monitor Seriale o Plotter Seriale per visualizzare i dati. |
-  
-  x = analogRead(A0);    // | Qui avviene la misura del voltaggio dal pin analogico A0, |
-                         // | la sua conversione e assegnazione alla variabile x.                         |
-                           
-  soglia = x + 100;      // | Autoimpostazione del valore di soglia. |
+  Serial.begin(9600); 
+  avg = analogRead(A0);                
+  soglia = avg + 100;    
+  pinMode(LED_BUILTIN, OUTPUT); 
 }
 
 
 void loop(){
-  x = analogRead(A0);    // | La prima cosa ad ogni ciclo è misurare il voltaggio, |
-                         // | convertirlo e assegnarlo alla variabile x.           |                 |
-  
-  fil[i] = x;
-  if(i < (fsize-1)) i++;
-  else i = 0;
   avg = 0;
   for(int j=0; j<fsize; j++){
+    fil[j] = analogRead(A0);
     avg += (float)fil[j];
   }
   avg = avg / (float)(fsize);
-  Serial.print(avg);     // | Arduino invia tramite comunicazione seriale il dato x     |
-                       // | e posso visualizzarlo grazie al Monitor Seriale o al      |
-                       // | Plotter Seriale che trovo alla voce "Strumenti" del menù. |
-
-  Serial.print(" "); Serial.println(soglia);  // | Invia uno spazio vuoto e poi "soglia" |
-  
-  if (x > soglia) {          // | Struttura di controllo per cui se x supera "soglia"  |
-    digitalWrite(13, HIGH);  // | allora il LED che si trova al pin digitale 13        |
-  }else{                     // | si accende, altrimenti si spegne. "HIGH" = 1 cioè    |
-    digitalWrite(13, LOW);   // | VCC cinque volt e "LOW" = 0 cioè GND o messa a terra |
+  Serial.print(avg);    
+  Serial.print(" "); Serial.println(soglia);  
+  if (avg > soglia) {          
+    digitalWrite(LED_BUILTIN, HIGH);  
+  }else{                     
+    digitalWrite(LED_BUILTIN, LOW); 
   } 
 
 }
-
 
 */
 
