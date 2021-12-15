@@ -105,3 +105,65 @@ void loop(){
 */
 
 
+
+
+
+
+
+
+
+/*
+
+// Esperimento #5: come il precedente ma con aggiunta di stima durata soprasoglia
+
+int soglia = 0;   
+int const fsize = 10;    
+int fil[fsize];                       
+float avg = 0.0;
+
+int conteggio = 0;
+#define ON HIGH
+#define OFF LOW
+long t0 = 0;
+long t = 0;
+
+
+void setup() {
+  Serial.begin(9600); 
+  avg = analogRead(A0);                
+  soglia = avg + 100;   
+  Serial.print("Soglia = "); Serial.println(soglia); 
+  pinMode(LED_BUILTIN, OUTPUT); 
+
+  conteggio = OFF;
+}
+
+
+void loop(){
+  avg = 0;
+  for(int j=0; j<fsize; j++){
+    fil[j] = analogRead(A0);
+    avg += (float)fil[j];
+  }
+  avg = avg / (float)(fsize);
+  //Serial.print(avg);    
+  //Serial.print(" "); Serial.println(soglia);  
+  if ((avg > soglia) && (conteggio == OFF)) { 
+    conteggio = ON;
+    t0 = millis();
+    Serial.print("Inizio");         
+    digitalWrite(LED_BUILTIN, HIGH);  
+  }
+  if ((avg < soglia) && (conteggio == ON)){
+    conteggio = OFF;
+    t = millis() - t0;
+    Serial.print(" - Fine - ");         
+    Serial.print("tempo = "); Serial.print(t); Serial.println(" millisecondi");                     
+    digitalWrite(LED_BUILTIN, LOW); 
+  } 
+
+}
+
+// Fonte https://www.youtube.com/watch?v=EDYA7WZKhn8
+
+*/
