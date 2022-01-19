@@ -91,7 +91,7 @@ void loop(){
     fil[j] = analogRead(A0);
     avg += (float)fil[j];
   }
-  avg = avg / (float)(fsize);
+  avg = avg / (float)(fsize); // errore da modificare ma ora non ho tempo
   Serial.print(avg);    
   Serial.print(" "); Serial.println(soglia);  
   if (avg > soglia) {          
