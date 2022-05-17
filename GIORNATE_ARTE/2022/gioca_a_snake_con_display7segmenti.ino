@@ -242,7 +242,7 @@ void loop() {
 
 // Fonte Aliverti https://www.youtube.com/watch?v=bj2cdgKhCDg
 // Fonte Aliverti https://github.com/zmaker/arduino_cookbook/blob/master/345-stati_con_interrupt/stati_con_interrupt/stati_con_interrupt.ino
-
+// Codice pulito da Luca del BIBLIOLAB, che ringrazio
 
 
 
