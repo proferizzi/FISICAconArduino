@@ -13,7 +13,9 @@
 //            -
 //           d 4
 
-/* Globals  */
+
+// VARIABILI GLOBALI
+
 
 volatile byte currentState = 0;
 volatile byte previousState = 0;
@@ -23,7 +25,7 @@ unsigned long globalTime, delayTime;
 bool startFlag = true;
 
 
-/* Configurations */
+// CONFIGURAZIONI 
 
 enum PINS_OUTPUT_CONFIGURATION {
     SEGMENT_PIN_A = 6,  // Un pin per ogni segmento,
