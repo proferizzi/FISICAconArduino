@@ -5,8 +5,8 @@
 // (l'ordine alfabetico come ordine crescente):
 //
 //           a 1
-//		-
-//		f 6 |   | b 2
+//            -
+//      f 6 |   | b 2
 //            -
 //           g 7
 //      e 5 |   | c 3
@@ -15,8 +15,6 @@
 
 
 // Variabili globali
-
-
 volatile byte currentState = 0;
 volatile byte previousState = 0;
 volatile unsigned long elapsedTime = 0;
@@ -26,7 +24,6 @@ bool startFlag = true;
 
 
 // Configurazioni
-
 enum PINS_OUTPUT_CONFIGURATION {
     SEGMENT_PIN_A = 6,  // Un pin per ogni segmento,
     SEGMENT_PIN_B = 7,  // non confondere con numero dello currentState.
@@ -46,7 +43,6 @@ enum SERIAL_CONFIGURATION {
     BOUNDS = 9600
 };
 
-
 enum STATES {
     WAIT_BUTTON_START = 0,
     SWITCHED_ON_SEGMENT_A = 1,
@@ -65,12 +61,11 @@ enum DELAY  {
     WAIT_300_MILLISECONDS = 300
 };
 
-
 void setupSerialConfiguration()  {
     Serial.begin(BOUNDS);
 }
 
-void setupSegmentPinConfiguration() {
+void setupSegmentPinConfiguration(){
     pinMode(SEGMENT_PIN_A, OUTPUT);
     pinMode(SEGMENT_PIN_B, OUTPUT);
     pinMode(SEGMENT_PIN_C, OUTPUT);
@@ -85,7 +80,6 @@ void setupButtonPinConfiguration() {
     pinMode(BUTTON_PIN_START, INPUT);
 }
 
-// Funzione ausiliaria chiamata dall'Interrupt presente nel setup iniziale
 void terminateLoop() {
     if ((currentState != WAIT_BUTTON_START) && (currentState != END_GAME)) {
         previousState = currentState;
@@ -98,8 +92,8 @@ void setupDigitalPinToInterrutp(){
     attachInterrupt(digitalPinToInterrupt(BUTTON_PIN_STOP), terminateLoop, RISING);
 }
 
-/* SETUP */
 
+// SETUP
 void setup() {
 
     initialState = SWITCHED_ON_SEGMENT_C;
@@ -112,7 +106,8 @@ void setup() {
     Serial.println("Pronto!");
 }
 
-/* Functions */
+
+// Funzioni ausuliarie
 
 bool checkDelayTimePassed(int delay) {
     unsigned long delayTime = millis() - globalTime;
