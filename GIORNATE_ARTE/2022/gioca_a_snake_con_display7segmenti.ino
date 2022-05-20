@@ -5,7 +5,7 @@
 // (l'ordine alfabetico come ordine crescente):
 //
 //           a 1
-//		      -
+//		-
 //		f 6 |   | b 2
 //            -
 //           g 7
@@ -14,7 +14,7 @@
 //           d 4
 
 
-// VARIABILI GLOBALI
+// Variabili globali
 
 
 volatile byte currentState = 0;
@@ -201,10 +201,12 @@ void changeStateFromFToA () {
 
 void changeDirectionAndStateFromCToFOrE() {
     if (initialState == SWITCHED_ON_SEGMENT_C) {
-        changeState(SEGMENT_PIN_G, SWITCHED_ON_SEGMENT_F, WAIT_HALF_SECOND, SWITCHED_ON_SEGMENT_B);
+        changeState(SEGMENT_PIN_G, SWITCHED_ON_SEGMENT_F, 
+                    WAIT_HALF_SECOND, SWITCHED_ON_SEGMENT_B);
     }
     if ((currentState != SWITCHED_ON_SEGMENT_F) && (initialState == SWITCHED_ON_SEGMENT_B)) {
-        changeState(SEGMENT_PIN_G, SWITCHED_ON_SEGMENT_E, WAIT_HALF_SECOND, SWITCHED_ON_SEGMENT_C);
+        changeState(SEGMENT_PIN_G, SWITCHED_ON_SEGMENT_E, 
+                    WAIT_HALF_SECOND, SWITCHED_ON_SEGMENT_C);
     }
 }
 
@@ -243,7 +245,8 @@ void loop() {
 }
 
 // Fonte Aliverti https://www.youtube.com/watch?v=bj2cdgKhCDg
-// Fonte Aliverti https://github.com/zmaker/arduino_cookbook/blob/master/345-stati_con_interrupt/stati_con_interrupt/stati_con_interrupt.ino
+// Fonte Aliverti https://github.com/zmaker/arduino_cookbook/blob/
+//       master/345-stati_con_interrupt/stati_con_interrupt/stati_con_interrupt.ino
 // Codice pulito da Luca del BIBLIOLAB, che ringrazio
 
 
