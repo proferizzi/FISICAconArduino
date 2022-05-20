@@ -25,12 +25,12 @@ unsigned long globalTime, delayTime;
 bool startFlag = true;
 
 
-// CONFIGURAZIONI 
+// Configurazioni
 
 enum PINS_OUTPUT_CONFIGURATION {
     SEGMENT_PIN_A = 6,  // Un pin per ogni segmento,
     SEGMENT_PIN_B = 7,  // non confondere con numero dello currentState.
-    SEGMENT_PIN_C = 8,  // I pin 2 SEGMENT_PIN_E 3 servono per le Interrupt
+    SEGMENT_PIN_C = 8,  // I pin 2 e 3 servono per le Interrupt
     SEGMENT_PIN_D = 9,
     SEGMENT_PIN_E = 10,
     SEGMENT_PIN_F = 5,
@@ -210,7 +210,7 @@ void changeDirectionAndStateFromCToFOrE() {
     }
 }
 
-/* LOOP */
+// Loop
 
 void loop() {
     switch (currentState) {
