@@ -1,10 +1,15 @@
-// Lettura velocità angolare con Encoder Rotativo
+// Lettura velocità angolare con Encoder Rotativo + PWM motore con IRF520
 
 
 #define encoderPinA  2
 #define encoderPinB  3
 volatile long pos = 0;
 unsigned long dt, t1;
+
+
+int motore = 9;           // PWM
+int x = 0;    
+int fadeAmount = 5; 
 
 
 void setup(){
@@ -16,7 +21,9 @@ void setup(){
   // encoder pin on interrupt 0 (pin 2)
   attachInterrupt(0, doEncoderA, CHANGE);
   // encoder pin on interrupt 1 (pin 3)
-  attachInterrupt(1, doEncoderB, CHANGE);  
+  attachInterrupt(1, doEncoderB, CHANGE); 
+
+  pinMode(motore, OUTPUT);
 }
 
 
@@ -28,6 +35,13 @@ void loop(){
     pos = 0;
     t1 = millis();
   }
+
+  analogWrite(motore, x);
+  x = x + fadeAmount;
+  if (brightness <= 0 || brightness >= 255) {
+    fadeAmount = -fadeAmount;
+  }
+  delay(30);
 }
 
 
@@ -72,4 +86,6 @@ void doEncoderB(){
 }
 
 
-// Fonte https://www.youtube.com/watch?v=5_-h6o30fDI
+// Fonte per encoder https://www.youtube.com/watch?v=5_-h6o30fDI
+// Fonte per motore (soprattutto schema elettrico dato che per lo sketch
+//       basta usare esempio Fade.ino https://www.youtube.com/watch?v=WYONijoyh8Q
