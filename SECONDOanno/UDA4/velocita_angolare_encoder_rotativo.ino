@@ -38,7 +38,7 @@ void loop(){
 
   analogWrite(motore, x);
   x = x + fadeAmount;
-  if (brightness <= 0 || brightness >= 255) {
+  if (x <= 0 || x >= 255) {
     fadeAmount = -fadeAmount;
   }
   delay(30);
