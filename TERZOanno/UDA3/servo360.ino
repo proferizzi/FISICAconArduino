@@ -11,14 +11,16 @@ void setup() {
 void loop() {
   for(int i = 90; i < 180; i++){   // cambiare a piacere -90 0 ecc.
     servo.write(i);
-    delay(50);    
+    delay(100);    
   }
+  digitalWrite(13,HIGH);
   delay(5000);
-  for(int i = 180; i > 90; i--){   // cambiare a piacere -90 0 ecc.
-    servo.write(i);
-    delay(50);    
-  }
-  delay(5000);
+  digitalWrite(13,LOW);
+  //for(int i = 180; i > 90; i--){   // cambiare a piacere -90 0 ecc.
+    //servo.write(i);
+    //delay(50);    
+  //}
+  //delay(5000);
 }
 
 
