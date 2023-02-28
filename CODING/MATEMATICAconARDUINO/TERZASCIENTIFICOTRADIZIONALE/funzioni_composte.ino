@@ -7,10 +7,10 @@
 // *** IMPOSTAZIONI INIZIALI
 
 // VARIABILI INTERE
-int x = 0;
-int y = 0;
+int x = 0;  // CONTROIMMAGINE DELLA g
+int y = 0;  // IMMAGINE DELLA f
 // VARIABILE BOOLEANA CIOE' ASSUME SOLO VALORE VERO O FALSO
-bool z = false;
+bool z = false;  // IMMAGINE DELLA g USATA COME CONTROIMMAGINE DELLA f
 
 
 void setup() {
