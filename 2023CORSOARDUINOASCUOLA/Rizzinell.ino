@@ -1,5 +1,8 @@
 bool puls = 0;  // Definizione di variabile booleana
 int x = 0;
+unsigned long t0 = 0;
+int stato = 0;
+
 
 void setup(){
   pinMode(7, INPUT_PULLUP);  
@@ -9,11 +12,25 @@ void setup(){
 
 
 void loop(){
-  x = analogRead(A0)/50;
-  Serial.println(x);
-  //puls = digitalRead(7);
-  digitalWrite(13, !puls);   
+  if(stato){
+    x = 0;
+    puls = digitalRead(7);    // CASO 1 comando col pulsante
+  }
+  if(!stato){
+    x = analogRead(A0)/50;  // CASO 2 comando col potenziometro
+    Serial.println(x);
+  }
+  
+  digitalWrite(13, !puls); // CASO A bloccante ok sfarfallìo
   delay(x);                 
   digitalWrite(13, puls);    
   delay(x);  
+  
+  //if((millis() - t0) >= x){  // CASO B non bloccante 
+    //t0 = millis();           // non riesco a sfarfallare
+    //if(puls == 0) puls = 1;     
+  //}else{
+    //puls = 0;    
+  //}
+  //digitalWrite(13, puls);
 }
