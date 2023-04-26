@@ -1,3 +1,47 @@
+// CARICA E SCARICA DEL CONDENSATORE
+
+//SELEZIONIAMO UNA DELLE PORTE ANALOGICHE (Analog In Pin (0-5)) PER LA MISURA DELLA 
+//TENSIONE AI CAPI DEL CONDENSATORE (IN QUESTO CASO LA 0)
+
+#define analogPin 0 
+//SELEZIONIAMO UNA DELLE PORTE DIGITALI (Digital I/O Pin 2-13) PER LA CARICA DEL 
+//CONDENSATORE (IN QUESTO CASO LA 2)
+
+#define chargePin 2 
+int numero_misure =150;
+int deltaT = 20; // intervallo di tempo in ms tra due misure successive
+
+
+void setup(){ 
+  pinMode(chargePin, OUTPUT); //Imposta la porta digitale in uscita 
+  digitalWrite(chargePin, LOW); //Imposta la porta digitale a 0 Volt, per scaricare il condensatore 
+  //Serial.println("STO ASPETTANDO 2 S PER FAR SCARICARE COMPLETAMENTE IL CONDENSATORE");
+  delay(2500); //tempo di attesa in ms per essere certi di aver scaricato completamente il condensatore 
+  Serial.begin(9600); //Impostiamo la velocità di trasmissione dati a 9600 baud 
+} 
+
+
+void loop(){ 
+  double Vout; // vettore dei valori di tensione misurati  
+  digitalWrite(chargePin, HIGH); // Si imposta la porta digitale a 5 Volt, per la carica del condensatore 
+  for(int i=0;i<numero_misure;i++) { 
+    Vout = analogRead(analogPin)*5.0/1023.0; //lettura del valore di tensione e conversione da canali a Volt 
+    Serial.println(Vout,4);
+    delay(deltaT); // Aspetto deltaT ms prima della prossima misura 
+  } 
+  digitalWrite(chargePin, LOW); // Si imposta la porta digitale a 0 Volt, per scaricare il condensatore 
+  for(int i=0;i<numero_misure;i++) { 
+    Vout = analogRead(analogPin)*5.0/1023.0; //lettura del valore di tensione e conversione da canali a Volt 
+    Serial.println(Vout,4);
+    delay(deltaT); // Aspetto deltaT ms prima della prossima misura 
+  } 
+} 
+
+
+/*
+
+// BLINK IN VARI MODI CON LED PULSANTE POTENZIOMETRO
+
 bool puls = 0;  // Definizione di variabile booleana
 int x = 0;
 unsigned long t0 = 0;
@@ -34,3 +78,6 @@ void loop(){
   //}
   //digitalWrite(13, puls);
 }
+
+
+*/
