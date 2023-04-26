@@ -1,23 +1,19 @@
 // CARICA E SCARICA DEL CONDENSATORE
 
-//SELEZIONIAMO UNA DELLE PORTE ANALOGICHE (Analog In Pin (0-5)) PER LA MISURA DELLA 
-//TENSIONE AI CAPI DEL CONDENSATORE (IN QUESTO CASO LA 0)
-
+//PORTA ANALOGICA A0 PER MISURA DELLA TENSIONE AI CAPI DEL CONDENSATORE 
 #define analogPin 0 
-//SELEZIONIAMO UNA DELLE PORTE DIGITALI (Digital I/O Pin 2-13) PER LA CARICA DEL 
-//CONDENSATORE (IN QUESTO CASO LA 2)
-
+//PORTA DIGITALE 2 PER LA CARICA DEL CONDENSATORE 
 #define chargePin 2 
-int numero_misure =150;
+int numero_misure = 150;
 int deltaT = 20; // intervallo di tempo in ms tra due misure successive
 
 
 void setup(){ 
-  pinMode(chargePin, OUTPUT); //Imposta la porta digitale in uscita 
-  digitalWrite(chargePin, LOW); //Imposta la porta digitale a 0 Volt, per scaricare il condensatore 
-  //Serial.println("STO ASPETTANDO 2 S PER FAR SCARICARE COMPLETAMENTE IL CONDENSATORE");
-  delay(2500); //tempo di attesa in ms per essere certi di aver scaricato completamente il condensatore 
-  Serial.begin(9600); //Impostiamo la velocità di trasmissione dati a 9600 baud 
+  pinMode(chargePin, OUTPUT); // Imposta la porta digitale in uscita 
+  digitalWrite(chargePin, LOW); // Imposta la porta digitale a 0 Volt, per scaricare il condensatore 
+  //Serial.println("STO ASPETTANDO 2 s PER FAR SCARICARE COMPLETAMENTE IL CONDENSATORE");
+  delay(2500); // Tempo di attesa in ms per essere certi di aver scaricato completamente il condensatore 
+  Serial.begin(9600); // Impostiamo la velocità di trasmissione dati a 9600 baud 
 } 
 
 
@@ -30,7 +26,7 @@ void loop(){
     delay(deltaT); // Aspetto deltaT ms prima della prossima misura 
   } 
   digitalWrite(chargePin, LOW); // Si imposta la porta digitale a 0 Volt, per scaricare il condensatore 
-  for(int i=0;i<numero_misure;i++) { 
+  for(int i=0 ; i<numero_misure ; i++) { 
     Vout = analogRead(analogPin)*5.0/1023.0; //lettura del valore di tensione e conversione da canali a Volt 
     Serial.println(Vout,4);
     delay(deltaT); // Aspetto deltaT ms prima della prossima misura 
