@@ -1,7 +1,7 @@
 bool puls = 0;  // Definizione di variabile booleana
 int x = 0;
 unsigned long t0 = 0;
-int stato = 0;
+int stato = 1;  // CAMBIARE VALORE PER CASO ZERO O CASO UNO
 
 
 void setup(){
@@ -12,12 +12,12 @@ void setup(){
 
 
 void loop(){
-  if(stato){
+  if(!stato){  // CASO 0 comando col pulsante
     x = 0;
-    puls = digitalRead(7);    // CASO 1 comando col pulsante
+    puls = digitalRead(7);    
   }
-  if(!stato){
-    x = analogRead(A0)/50;  // CASO 2 comando col potenziometro
+  if(stato){  // CASO 1 comando col potenziometro
+    x = analogRead(A0)/50;  
     Serial.println(x);
   }
   
