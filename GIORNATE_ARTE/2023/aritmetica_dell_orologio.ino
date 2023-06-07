@@ -1,3 +1,39 @@
+int i = 0 ;
+void setup() {
+  Serial.begin(9600);  
+  pinMode(13,OUTPUT);
+  pinMode(12,OUTPUT);  
+  pinMode(4,INPUT);
+}
+void loop() {
+  Serial.print(i);
+  Serial.print(" diviso ");
+  Serial.print(12);
+  Serial.print(" fa resto ");
+  Serial.println(i%12);
+  Serial.print(i);
+  Serial.print(" diviso ");
+  Serial.print(6);
+  Serial.print(" fa resto ");
+  Serial.println(i%6);
+  if((i%12) == 0){              // Ogni 12 ore si accende
+    digitalWrite(13,HIGH);  
+  }else{
+    digitalWrite(13,LOW);
+  }
+  
+  if((i%6) == 0){              // Ogni 6 ore si accende
+    digitalWrite(12,HIGH);     
+  }else{
+    digitalWrite(12,LOW);
+  }
+  if(digitalRead(4) == HIGH){
+    i++; 
+  }
+  delay(100);
+}
+
+
 
 /*
 // ESERCIZIO 1
