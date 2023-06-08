@@ -68,5 +68,23 @@ void loop2(){
 }
 
 
-// Fonte Aliverti https://www.youtube.com/watch?v=bj2cdgKhCDg
-//                https://www.youtube.com/watch?v=TAOMpDNvBaY
+// Fonte Aliverti #207 https://www.youtube.com/watch?v=bj2cdgKhCDg
+//                #208 https://www.youtube.com/watch?v=TAOMpDNvBaY
+
+// ULTERIORI FONTI DA VEDERE #223 https://www.youtube.com/watch?v=5WCrWb4Kh74
+// #663 https://www.youtube.com/watch?v=WnGSuXFJ_TM
+// #345 https://www.youtube.com/watch?v=Rs-NIc3hHRg
+// #364 https://www.youtube.com/watch?v=M-nnwQr4wu4
+// #45 https://www.youtube.com/watch?v=nZvzIkbw_78&t=667s
+// #222 https://www.youtube.com/watch?v=en9APNfGm0E
+// #652 https://www.youtube.com/watch?v=SxgZTvkb_V0
+// #281 https://www.youtube.com/watch?v=0c4Vjjv7h8A&t=203s poi #282
+// #731 https://www.youtube.com/watch?v=QMjrIjtx3PU&t=112s
+// #498 https://www.youtube.com/watch?v=JBO0sLzumk8
+// #365 https://www.youtube.com/watch?v=OLoULIlc5eM
+// #205 https://www.youtube.com/watch?v=XHnnL0I0lDc&t=1s
+// #618 https://www.youtube.com/watch?v=1SjG1hSOHVs&t=56s
+// #486 https://www.youtube.com/watch?v=Xct-JE_csJE
+// #366 https://www.youtube.com/watch?v=ZgDFejvOb98
+// #297 https://www.youtube.com/watch?v=PImo3s9JzM4 e poi #298
+// #262 https://www.youtube.com/watch?v=I4IXILk33Rk
