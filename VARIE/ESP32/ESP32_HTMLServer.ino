@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <ESPmDNS.h>
 
-const char* ssid = "ZyXEL_8AB9";
-const char* password = "8Y7DU3DT4G";
+const char* ssid = "";
+const char* password = "";
 
 WiFiServer server(80);
 
