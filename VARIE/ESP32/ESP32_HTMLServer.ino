@@ -1,3 +1,6 @@
+// Accendiamo un LED andando su un browser e scrivendo "esp32.local"
+// Test il 9/6/23 ---> ok!
+
 #include <WiFi.h>
 #include <ESPmDNS.h>
 
