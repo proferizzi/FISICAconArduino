@@ -37,4 +37,4 @@ Benvenuta/o! Sono Marco Rizzinelli (mr82xxx@xxxemail.it senza le x) e qui trovi 
 4) LA VECCHIA TEORIA DEI QUANTI
 5) INTRODUZIONE ALLA MECCANICA QUANTISTICA E ALLA STRUTTURA DELLA MATERIA
 
-E qui il mio sito https://rizzinelli.net
+E qui il mio sito rizzinelli.net
