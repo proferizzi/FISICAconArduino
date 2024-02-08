@@ -7,10 +7,10 @@
 //            breadboard e cavetti
 
 
-#define vccPin 3
-#define trigPin 4
-#define echoPin 5
-#define gndPin 6
+#define vccPin 3  //14
+#define trigPin 4  //15
+#define echoPin 5  //16
+#define gndPin 6  //17
 
 #define vccPinBis 8
 #define trigPinBis 9
