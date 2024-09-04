@@ -1,12 +1,8 @@
 # FISICA con Arduino
-Benvenuta/o! Sono Marco Rizzinelli (mr82xxx@xxxemail.it senza le x) e qui trovi sketch (e non solo) per esperimenti nei licei scientifici (rimodulabili anche per scienze umane, linguistici, classici), nel tuo fablab o con chi tu voglia, ciò che basta è la passione per il metodo scientifico galileiano... Unità di apprendimento 1 e 2 da settembre a dicembre, 3 e 4 da gennaio ad aprile, 5 da maggio a giugno. 
+Benvenuta/o! Sono Marco Rizzinelli e qui trovi sketch (e non solo) per esperimenti nei licei scientifici (rimodulabili anche per scienze umane, linguistici, classici), nel tuo fablab o con chi tu voglia, ciò che basta è la passione per il metodo scientifico galileiano... Unità di apprendimento 1 e 2 da settembre a dicembre, 3 e 4 da gennaio ad aprile, 5 da maggio a giugno. 
 
 # PRIMO ANNO
-1) INTRODUZIONE ALLA FISICA, MISURARE GRANDEZZE
-2) GRAFICI, PROPORZIONALITÀ ED ERRORI
-3) VETTORI E FORZE
-4) EQUILIBRIO DEL PUNTO MATERIALE E DEL CORPO RIGIDO
-5) INIZIO DI FLUIDOSTATICA
+https://proferizzinelli.altervista.org/fisica-primo-anno/
 
 # SECONDO ANNO
 1) RIPASSO FLUIDOSTATICA E INTRODUZIONE AL MOTO IN CINEMATICA 
