@@ -1,16 +1,11 @@
 # FISICA con Arduino
 Benvenuta/o! Sono Marco Rizzinelli e qui trovi sketch (e non solo) per esperimenti nei licei scientifici (rimodulabili anche per scienze umane, linguistici, classici), nel tuo fablab o con chi tu voglia, ciò che basta è la passione per il metodo scientifico galileiano... Unità di apprendimento 1 e 2 da settembre a dicembre, 3 e 4 da gennaio ad aprile, 5 da maggio a giugno. 
 
-# PRIMO ANNO
-https://proferizzinelli.altervista.org/fisica-primo-anno/
+# MIO SITO INTERNET PRINCIPALE DI RISORSE DIDATTICHE PER LICEO SCIENTIFICO
+rizzinelli.net
 
 # SECONDO ANNO
-1) RIPASSO FLUIDOSTATICA E INTRODUZIONE AL MOTO IN CINEMATICA 
-  (EVENTUALE INIZIO TERMOLOGIA VEDI TERZO ANNO UDA 5)
-2) IL MOTO IN UNA DIMENSIONE, MRU E INIZIO MRUA
-3) ANCORA MRUA, LA CADUTA DEI GRAVI
-4) MOTO PARABOLICO, CIRCOLARE UNIFORME, ARMONICO
-5) I PRINCIPI DELLA DINAMICA
+
 
 # TERZO ANNO
 1) RIPASSO DINAMICA, MECCANICA DI SISTEMI DI CORPI E LAVORO DI UNA FORZA
