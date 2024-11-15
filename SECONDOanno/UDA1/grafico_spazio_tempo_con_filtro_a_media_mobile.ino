@@ -99,3 +99,83 @@ void loop(){
 
 
 // Fonte per filtro Aliverti https://www.youtube.com/watch?v=cnQSCPUgiA4
+
+
+
+
+
+
+
+
+/*
+
+// LEGGE ORARIA 
+
+#define vccPin 9   // installare il sensore direttamente su Arduino UNO
+#define trigPin 10
+#define echoPin 11
+#define gndPin 12
+
+long duration = 0;  // duration in microsecondi 
+float distance = 0.0; // distance in cm
+
+int const fsize = 6;  // filtro a media mobile
+int fil[fsize];
+int i = 0;
+float avg = 0.0;
+
+
+void setup() {
+  Serial.begin (9600);
+  
+  pinMode(vccPin, OUTPUT);
+  digitalWrite(vccPin, HIGH);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(gndPin, OUTPUT);
+  digitalWrite(gndPin, LOW);
+}
+
+
+void loop(){
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(5);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH, 20000);
+  while(duration == 0){ 
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(5);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    duration = pulseIn(echoPin, HIGH, 20000);
+    //Serial.println(duration);
+  }
+  //Serial.println(duration);
+  
+  //fil[i] = duration;
+  //if(i < (fsize-1)) i++;
+  //else i = 0;
+  //avg = 0;
+  //for(int j=0; j<fsize; j++){
+    //avg += (float)fil[j];
+  //}
+  //avg = avg / (float)(fsize);
+  //avg = avg/2.0 * 0.0343;
+    
+  distance = float(duration)/2.0 * 0.0343; // calcolo con velocità del suono
+  
+  if((distance <= 100.0)&&(distance > 0.0)){
+    Serial.println(distance); //Serial.print(" "); Serial.println(avg);  
+  }
+  //delay(10);
+
+}
+
+
+// Fonte sensore a ultrasuoni https://www.youtube.com/watch?v=gwAhJKsS8No
+// Fonte filtro a media mobile https://www.youtube.com/watch?v=cnQSCPUgiA4
+
+*/
