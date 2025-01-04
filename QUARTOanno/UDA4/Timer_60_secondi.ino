@@ -22,8 +22,13 @@ void loop() {
   if(counter < 60){
     counter++;
     MFS.write(counter);
+    if(counter == 10) tone(3, 200, 500);
+    if(counter == 20) tone(3, 250, 500);
+    if(counter == 30) tone(3, 300, 500);
+    if(counter == 40) tone(3, 350, 500);
+    if(counter == 50) tone(3, 400, 500);
   }else{
-    tone(3, 400, 2000);
+    tone(3, 500, 2000);
     counter = 0;
   }
   delay(1000);
