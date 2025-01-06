@@ -46,11 +46,11 @@
  * NB: non collegare mai un pin con la Terra oppure rovinerai Arduino!
  */
 
-void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
+void setup() {  // questo corpo di istruzioni si esegue una volta sola dopo ogni reset
+  pinMode(LED_BUILTIN, OUTPUT);  // settiamo come uscita il pin predefinito (13 nel modello UNO)
 }
 
-void loop() {
+void loop() {  // questo corpo di istruzioni viene ripetuto all'infinito
   digitalWrite(LED_BUILTIN, HIGH);   // accende il LED
   delay(1000);                       // aspetta un tempo in millisecondi
   digitalWrite(LED_BUILTIN, LOW);    // spegne il LED
@@ -92,6 +92,7 @@ void loop() {
   float voltage = sensorValue * (5.0 / 1023.0);  // convertiamolo
   Serial.println(voltage);  // stampiamolo
 }
+
 /* osservazione: ruotando il potenziometro possiamo cambiare il valore del voltaggio
  * ipotesi: nel potenziometro è presente un meccanismo che...
  * esperimento: invertiamo i contatti tra pin esterni del potenziometro.
@@ -125,21 +126,21 @@ void loop() {
  * L'altro estremo del fotoresistore andrà a GND e l'altro estremo del resistore a +5V
  */
 
-int x0 = 0;
+int x0 = 0;  // creiamo una variabile intera e le diamo un certo valore
 
 void setup() {
-  pinMode(13, OUTPUT);
-  Serial.begin(9600);
+  pinMode(13, OUTPUT);  // settiamo come uscita il pin 13
+  Serial.begin(9600);   // inizializzamo la comunicazione seriale a 9600 bit/secondo
   x0 = analogRead(A3);   // prendiamo una misura iniziale con luce
 }
 
 void loop() {
   Serial.println(analogRead(A3));  // leggiamo i dati per capire quale soglia usare
   if(analogRead(A3)<(x0 - 100)){  // creiamo una soglia adeguata 
-    digitalWrite(13,HIGH);
+    digitalWrite(13,HIGH);  // accendiamo il LED
   }
-  else{
-    digitalWrite(13,LOW);
+  else{  // altrimenti
+    digitalWrite(13,LOW);  // si spegne il LED
   }
 }
 /* osservazione: un partitore di tensione è uno strumento potente da usare con sensori analogici
@@ -162,6 +163,61 @@ void loop() {
 
 
 
+/* ESPERIMENTO 4. SENSORE A ULTRASUONI - "ultrasuoni.ino" 
+ * Impariamo ad usare il sensore HCSR04
+ * 
+ * Circuito:
+ * Inseriamo direttamente nella scheda Arduino il sensore a ultrasuoni,
+ * prestando attenzione a quanto scritto qui sotto nelle quattro "define";
+ * poi servirà usare il plotter seriale o il monitor seriale
+ */
+ 
+#define vccPin 8   // creiamo un parametro e lo colleghiamo ad un certo pin
+#define trigPin 9  // creiamo un parametro e lo colleghiamo ad un certo pin
+#define echoPin 10  // creiamo un parametro e lo colleghiamo ad un certo pin
+#define gndPin 11  // creiamo un parametro e lo colleghiamo ad un certo pin
+
+int led = 13;  // creiamo una variabile intera e le diamo un certo valore
+long duration = 0;  // creiamo variabile intera e le diamo un certo valore (in millisecondi)
+float distance = 0; // creiamo variabile a virgola mobile e le diamo un certo valore (in cm)
+
+void setup() {
+  Serial.begin(9600);  // inizializzamo la comunicazione seriale a 9600 bit/secondo
+  pinMode(vccPin, OUTPUT);  // alimentazione sul pin vccPin
+  digitalWrite(vccPin, HIGH);
+  pinMode(trigPin, OUTPUT);  // pin per HCSR04
+  pinMode(echoPin, INPUT);
+  pinMode(gndPin, OUTPUT);    // messa a Terra sul pin gndPin
+  digitalWrite(gndPin, LOW);
+  pinMode(led,OUTPUT);    // un LED per rilevare superamento di soglia
+  digitalWrite(led,LOW);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);   // procedura di misura del sensore a ultrasuoni
+  delayMicroseconds(5);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH, 20000);   // cosa viene misurato?
+
+  distance = duration/2.0 * 0.0343;  // cosa viene calcolato?
+
+  if((distance<60) && (distance>0)){    // per un buon grafico sul serial plotter
+    Serial.println(distance);  // stampiamolo
+    delay(50);
+  if(distance > 20){  // creiamo una soglia adeguata 
+    digitalWrite(led,HIGH);  // accendiamo il LED
+  }
+  else{  // altrimenti
+    digitalWrite(led,LOW);  // si spegne il LED
+  }
+  }
+}
+/* osservazione: che significa il valore 0.0343? E il fattore 2?
+ * ipotesi: potrebbe centrare la velocità del suono in aria secca...
+ * esperimento: controllare correttezza risultati con un confronto con righello
+ * riflessioni: il sensore a ultrasuoni deve mandare un segnale che poi ritorna... */
 
 
 
@@ -180,6 +236,115 @@ void loop() {
 
 
 
+
+
+
+
+
+
+
+// APPROFONDIMENTO
+// ESPERIMENTO DI CINEMATICA: 
+// LEGGE ORARIA DI DUE CORPI IN MOTO, in tempo reale
+//
+// Materiale: microcontrollore con cavo USB, 
+//            PC o altro con serial plotter
+//            2 sensori a ultrasuoni
+//            breadboard e cavetti
+
+
+#define vccPin 3  //14
+#define trigPin 4  //15
+#define echoPin 5  //16
+#define gndPin 6  //17
+
+#define vccPinBis 8
+#define trigPinBis 9
+#define echoPinBis 10
+#define gndPinBis 11
+
+long duration = 0;  // duration in microsecondi 
+float distance = 0; // distance in cm
+
+long durationBis = 0;
+float distanceBis = 0;
+
+int const fsize = 4;
+int fil [fsize];
+int i=0;
+float avg = 0.0;
+
+
+void setup() {
+  Serial.begin (9600);
+  
+  pinMode(vccPin, OUTPUT);
+  digitalWrite(vccPin, HIGH);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(gndPin, OUTPUT);
+  digitalWrite(gndPin, LOW);
+
+  pinMode(vccPinBis, OUTPUT);
+  digitalWrite(vccPinBis, HIGH);
+  pinMode(trigPinBis, OUTPUT);
+  pinMode(echoPinBis, INPUT);
+  pinMode(gndPinBis, OUTPUT);
+  digitalWrite(gndPinBis, LOW);
+
+}
+
+
+void loop(){
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(5);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH, 20000);
+  //if(duration == 0){ 
+    //pinMode(echoPin, OUTPUT); 
+    //digitalWrite(echoPin, LOW); 
+    //delayMicroseconds(200);
+    //pinMode(echoPin, INPUT); 
+  //}
+
+  fil[i] = duration;
+  if(i < (fsize-1)) i++;
+  else i = 0;
+  avg = 0;
+  for(int j=0; j<fsize; j++){
+    avg += (float)fil[j];
+  }
+  avg = avg / (float)(fsize);
+  
+  distance = avg/2.0 * 0.0343; // calcolo con velocità del suono
+  
+  digitalWrite(trigPinBis, LOW);
+  delayMicroseconds(5);
+  digitalWrite(trigPinBis, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPinBis, LOW);
+  durationBis = pulseIn(echoPinBis, HIGH,20000);
+  //if(durationBis == 0){ 
+    //pinMode(echoPinBis, OUTPUT); 
+    //digitalWrite(echoPinBis, LOW);
+    //delayMicroseconds(200);
+    //pinMode(echoPinBis, INPUT); 
+  //}
+  
+  distanceBis = durationBis/2.0 * 0.0343; // calcolo con velocità del suono
+
+  if((distance <= 40)&&(distanceBis <= 40)&&(distance > 0)){
+    Serial.print(distance);
+    Serial.print(" ");
+    Serial.println(distanceBis);
+    delay(60);  
+  }
+}
+
+
+// Fonte per filtro Aliverti https://www.youtube.com/watch?v=cnQSCPUgiA4
 
 
 
