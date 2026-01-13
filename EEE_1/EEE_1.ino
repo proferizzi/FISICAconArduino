@@ -1,6 +1,6 @@
 /* LE LEGGI DELLA FISICA CON ARDUINO! PROVA... IMPARA... DISCUTI...
  *
- * A cura di Marco Rizzinelli - progetto EEE a.s. 2024/25
+ * A cura di Marco Rizzinelli - progetto EEE a.s. 2025/26
  *
  * Benvenuti/e! In questo corso cerchiamo di vivere le fasi del metodo scientifico:
  * osservazione, ipotesi, esperimento (materiale, procedura, dati, analisi), riflessioni. 
