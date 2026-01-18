@@ -32,6 +32,14 @@ long duration = 0;  // creiamo variabile intera e le diamo un certo valore (in m
 float distance = 0; // creiamo variabile a virgola mobile e le diamo un certo valore (in cm)
 
 
+// IMPOSTAZIONI INIZIALI DEI PARAMETRI PER IL FILTRO
+float x_est = 0;  // stima iniziale, dipende dal fenomeno studiato
+float P = 1;   // incertezza stima, dipende dal fenomeno studiato
+float Q = 0.05;  // basso se il dato cambia poco, 
+                 // se cambia molto si aumenta fino a 1
+float R = 4; // vicino a 1 se è poco rumoroso il sensore, altrimenti verso il 10
+
+
 void setup() {
   Serial.begin(9600);  // inizializzamo la comunicazione seriale a 9600 bit/secondo
   pinMode(vccPin, OUTPUT);  // alimentazione sul pin vccPin
@@ -55,17 +63,34 @@ void loop() {
 
   distance = duration/2.0 * 0.0343;  // cosa viene calcolato?
 
-  if((distance<60) && (distance>0)){    // per un buon grafico sul serial plotter
+  if((distance<100) && (distance>2)){    // per un buon grafico sul serial plotter
+    float kout = kalman(distance);
     Serial.println(distance);  // stampiamolo
+    Serial.println(" ");
+    Serial.println(kout);
+    Serial.println(",0,100");
     delay(50);
-  if(distance > 20){  // creiamo una soglia adeguata 
-    digitalWrite(led,HIGH);  // accendiamo il LED
+    if(distance > 20){  // creiamo una soglia adeguata 
+      digitalWrite(led,HIGH);  // accendiamo il LED
+    }else{  // altrimenti
+      digitalWrite(led,LOW);  // si spegne il LED
+    }
+  }else{
+    Serial.println("0,0,0,200");
   }
-  else{  // altrimenti
-    digitalWrite(led,LOW);  // si spegne il LED
-  }
-  }
+  delay(50);
 }
+
+// FUNZIONE DI CALCOLO DEL DATO FILTRATO
+float kalman(float misura){
+  float x_pred = x_est;   // posizione stimata, predetta
+  float P_pred = P + Q;  // dovrebbe ridursi man mano si procede coi calcoli
+  float K = P_pred / (P_pred + R);  // guadagno di Kalman, il suo valore tra 0 e 1
+                                    // esprime bontà del sensore vista dal filtro
+  x_est = x_pred + K * (misura - x_pred);
+  P = (1 - K) * P_pred;
+  return(x_est);
+  }
 // Fonte Aliverti https://www.youtube.com/watch?v=5R-zjgHR0OU #958
 
 
@@ -162,7 +187,6 @@ void loop(){
   }
   
 }
-
 // Da Paolo Aliverti:
 // Fonte https://www.youtube.com/watch?v=GOGpCERzdns 
 //       (partitore resistivo e lettura dati analogici)
