@@ -35,9 +35,9 @@ float distance = 0; // creiamo variabile a virgola mobile e le diamo un certo va
 // IMPOSTAZIONI INIZIALI DEI PARAMETRI PER IL FILTRO
 float x_est = 0;  // stima iniziale, dipende dal fenomeno studiato
 float P = 1;   // incertezza stima, dipende dal fenomeno studiato
-float Q = 0.05;  // basso se il dato cambia poco, 
+float Q = 0.70;  // basso se il dato cambia poco, 
                  // se cambia molto si aumenta fino a 1
-float R = 4; // vicino a 1 se è poco rumoroso il sensore, altrimenti verso il 10
+float R = 2; // vicino a 1 se è poco rumoroso il sensore, altrimenti verso il 10
 
 
 void setup() {
@@ -65,10 +65,10 @@ void loop() {
 
   if((distance<100) && (distance>2)){    // per un buon grafico sul serial plotter
     float kout = kalman(distance);
-    Serial.println(distance);  // stampiamolo
-    Serial.println(" ");
-    Serial.println(kout);
-    Serial.println(",0,100");
+    Serial.print(distance);  // stampiamolo
+    Serial.print(",");
+    Serial.print(kout);
+    Serial.println(",0,20");  // Estremi asse ordinate, in centimetri
     delay(50);
     if(distance > 20){  // creiamo una soglia adeguata 
       digitalWrite(led,HIGH);  // accendiamo il LED
@@ -76,7 +76,7 @@ void loop() {
       digitalWrite(led,LOW);  // si spegne il LED
     }
   }else{
-    Serial.println("0,0,0,200");
+    Serial.println("0,0,0,20");
   }
   delay(50);
 }
