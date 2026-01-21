@@ -102,10 +102,192 @@ float kalman(float misura){
 
 
 
+ /* ESPERIMENTO 6. FRONTI DI SALITA E DISCESCA 
+ * con sensore a ultrasuoni e filtro di Kalman 
+ *  
+ * CONTEGGIAMO I FRONTI DI DISCESA - ANALOGIA CON ARDUSIPM
+ * 
+ * Circuito: vedi esperimento 5
+ */
+ 
+#define vccPin 8   // creiamo un parametro e lo colleghiamo ad un certo pin
+#define trigPin 9  // creiamo un parametro e lo colleghiamo ad un certo pin
+#define echoPin 10  // creiamo un parametro e lo colleghiamo ad un certo pin
+#define gndPin 11  // creiamo un parametro e lo colleghiamo ad un certo pin
+
+int led = 13;  // creiamo una variabile intera e le diamo un certo valore
+long duration = 0;  // creiamo variabile intera e le diamo un certo valore (in millisecondi)
+float distance = 0; // creiamo variabile a virgola mobile e le diamo un certo valore (in cm)
+
+
+// IMPOSTAZIONI INIZIALI DEI PARAMETRI PER IL FILTRO
+float kout = 0;
+float x_est = 0;  // stima iniziale, dipende dal fenomeno studiato
+float P = 1;   // incertezza stima, dipende dal fenomeno studiato
+float Q = 0.70;  // basso se il dato cambia poco, 
+                 // se cambia molto si aumenta fino a 1
+float R = 2; // vicino a 1 se è poco rumoroso il sensore, altrimenti verso il 10
 
 
 
-/* ESPERIMENTO 6. CONTEGGIAMO I FRONTI DI DISCESA - ANALOGIA CON ARDUSIPM
+// IMPOSTAZIONI PER CONTEGGIO FRONTI DI DISCESA
+int x = 0;
+int soglia = 0;  // variabile misurata solo all'inizio                
+
+bool stato = false;       // stato e prev_stato falsi: sotto soglia
+bool prev_stato = false;  // stato e prev_stato veri: sopra soglia
+                          // fronte salita se stato vero ma prev_stato falso
+                          // fronte discesa se stato falso ma prev_stato vero
+                          
+bool count = false;  // variabile che ci dice se stiamo conteggiando o no    
+long istante = 0;    // variabile che misura l'istante a inizio conteggio,
+                     // che inizierà ad ogni fronte di salita 
+
+#define FINESTRA 10000  // durata fissa di conteggio, in millisecondi
+int click = 0;          // variabile che aumenta ad ogni fronte di discesa
+
+
+void setup() {
+  Serial.begin(9600);  // inizializzamo la comunicazione seriale a 9600 bit/secondo
+  pinMode(vccPin, OUTPUT);  // alimentazione sul pin vccPin
+  digitalWrite(vccPin, HIGH);
+  pinMode(trigPin, OUTPUT);  // pin per HCSR04
+  pinMode(echoPin, INPUT);
+  pinMode(gndPin, OUTPUT);    // messa a Terra sul pin gndPin
+  digitalWrite(gndPin, LOW);
+  pinMode(led,OUTPUT);    // un LED per rilevare superamento di soglia
+  digitalWrite(led,LOW);
+
+  digitalWrite(trigPin, LOW);   // procedura di misura del sensore a ultrasuoni
+  delayMicroseconds(5);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH, 20000);   // cosa viene misurato?
+  x = duration/2.0 * 0.0343; 
+  delay(500);  // aspetto mezzo secondo   
+  digitalWrite(trigPin, LOW);   // procedura di misura del sensore a ultrasuoni
+  delayMicroseconds(5);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH, 20000);   // cosa viene misurato?
+  x += duration/2.0 * 0.0343;  // misuro di nuovo e sommo le prime due misure  
+  delay(500);  // aspetto mezzo secondo
+  digitalWrite(trigPin, LOW);   // procedura di misura del sensore a ultrasuoni
+  delayMicroseconds(5);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH, 20000);   // cosa viene misurato?
+  x += duration/2.0 * 0.0343; // misuro di nuovo e sommo le prime tre misure    
+  soglia = x/3 + 10;  // calcolo la media e sommo un valore adeguato
+  Serial.print("soglia = "); Serial.println(soglia);  // stampo la soglia 
+
+}
+
+
+void loop() { 
+  digitalWrite(trigPin, LOW);   // procedura di misura del sensore a ultrasuoni
+  delayMicroseconds(5);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH, 20000);   // cosa viene misurato?
+
+  distance = duration/2.0 * 0.0343;  // cosa viene calcolato?
+
+  if((distance<100) && (distance>2)){    // per un buon grafico sul serial plotter
+    kout = kalman(distance);
+    //Serial.print(distance); Serial.print(","); Serial.print(kout);
+    //Serial.println(",0,20");  // Estremi asse ordinate, in centimetri
+    delay(50);
+    if(distance > 20){  // creiamo una soglia adeguata 
+      digitalWrite(led,HIGH);  // accendiamo il LED
+    }else{  // altrimenti
+      digitalWrite(led,LOW);  // si spegne il LED
+    }
+  }else{
+    //Serial.println("0,0,0,20");
+  }
+  delay(50);
+
+  x = kout;
+    //Serial.println(stato);
+  if(x > soglia){   // lo confronto con la soglia
+    stato = true;
+  }else{
+    stato = false;
+  }
+  
+  if(!prev_stato && stato){        
+    digitalWrite(LED_BUILTIN, HIGH);    
+    Serial.println("salita");
+    if(!count){
+      count = true;
+      istante = millis();
+      Serial.println("start");
+      click = 0;
+    }
+  }
+ 
+  if (prev_stato && !stato){                   
+    digitalWrite(LED_BUILTIN, LOW);
+    Serial.println("discesa");
+    click++;
+  }
+
+  prev_stato = stato;
+
+  // DI SEGUITO: la differenza (millis() - istante) è intervallo di tempo,
+  // se supera la finestra finisce il conteggio, altrimenti riparte col loop         
+  if(count && ( (millis()-istante) > FINESTRA) ){   
+    count = false;             
+    Serial.println("fine");  
+    Serial.print("Numero di rilevazioni = "); Serial.println(click); Serial.println("-------");
+  }
+}
+
+// FUNZIONE DI CALCOLO DEL DATO FILTRATO
+float kalman(float misura){
+  float x_pred = x_est;   // posizione stimata, predetta
+  float P_pred = P + Q;  // dovrebbe ridursi man mano si procede coi calcoli
+  float K = P_pred / (P_pred + R);  // guadagno di Kalman, il suo valore tra 0 e 1
+                                    // esprime bontà del sensore vista dal filtro
+  x_est = x_pred + K * (misura - x_pred);
+  P = (1 - K) * P_pred;
+  return(x_est);
+  }
+// Fonte Aliverti https://www.youtube.com/watch?v=5R-zjgHR0OU #958
+// Fonte https://www.youtube.com/watch?v=Utl1bhzv0dY   (fronti salita e discesa)
+// Fonte per sviluppo futuro https://www.youtube.com/watch?v=EDYA7WZKhn8     (quanto tempo l'hai premuto)
+
+/* osservazione: Ma se arrivano due "muoni" quasi contemporaneamente?
+ * ipotesi: potremmo stimare il tempo per cui si sta sopra soglia e...
+ * esperimento: provare a realizzare la situazione indesiderata, seppur rara
+ * riflessioni: e per rilevare solo i "muoni" che passano lungo certe direzioni? */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// APPROFONDIMENTI
+
+
+
+/* 6BIS    VARIANTE ESPERIMENTO 6. CONTEGGIAMO I FRONTI DI DISCESA - ANALOGIA CON ARDUSIPM
  * Riprendiamo l'esperimento 3 del partitore resistivo 
  * con fotoresistore come sensore analogico
  * 
@@ -199,31 +381,6 @@ void loop(){
  * ipotesi: potremmo stimare il tempo per cui si sta sopra soglia e...
  * esperimento: provare a realizzare la situazione indesiderata, seppur rara
  * riflessioni: e per rilevare solo i "muoni" che passano lungo certe direzioni? */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// APPROFONDIMENTI
 
 
 
@@ -393,12 +550,6 @@ void loop() {
  * esperimento: invertiamo nei due digitalWrite HIGH con LOW e vediamo cosa accade, 
  *              poi mettiamo LOW sul pulsante e vediamo cosa accade, poi inviamo messaggi Morse. 
  * riflessioni: l'implicazione logica è utilizzata in molte leggi fisiche, ad esempio... */
-
-
-
-
-
-
 
 
 
